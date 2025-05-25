@@ -1,50 +1,85 @@
 package com.wh.reception.domain;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
-@Entity 
-@Table(name="parcels")
-@PrimaryKeyJoinColumn( name = "reference" )
-public class Parcel extends Reception {
-	
-	
-	
-	
-	private static final long serialVersionUID = 1L;
-	
-    private int width;
-    private int length;
+@Entity
+@Table(name = "parcels")
+public class Parcel extends AbstractCargo {
 
-	public Parcel() {
-	}
+    private static final long serialVersionUID = 1L;
 
-	public Parcel(int width, int length) {
-		this.width = width;
-		this.length = length;
-	}
+    private Long id;
+    private double width; 
+    private double length; 
+    private List<ItemLineParcel> itemLineParcels;
+    
 
-	@Column(nullable = false)
-	public int getWidth() {
-		return width;
-	}
+    public Parcel() {
+    }
 
-	public void setWidth(int width) {
-		this.width = width;
-	}
+    public Parcel(double width, double length, double weight, boolean fragile, boolean rotten,
+                  LocalDate deliveryDate, LocalDate expirationDate, Reception reception) {
+        this.width = width;
+        this.length = length;
+        this.weight = weight;
+        this.fragile = fragile;
+        this.rotten = rotten;
+        this.deliveryDate = deliveryDate;
+        this.expirationDate = expirationDate;
+        this.reception = reception;
+    }
 
-	@Column(nullable = false)
-	public int getLength() {
-		return length;
-	}
+    @Id
+    @Column(name = "parcel_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Long getId() {
+        return id;
+    }
 
-	public void setLength(int length) {
-		this.length = length;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    @Column(nullable = false)
+    public double getWidth() {
+        return width;
+    }
+
+    public void setWidth(double width) {
+        this.width = width;
+    }
+
+    @Column(nullable = false)
+    public double getLength() {
+        return length;
+    }
+
+    public void setLength(double length) {
+        this.length = length;
+    }
+    @OneToMany(mappedBy = "parcel", fetch = FetchType.LAZY)
+    public List<ItemLineParcel> getItemLineParcels() {
+        return itemLineParcels;
+    }
+
+    public void setItemLineParcels(List<ItemLineParcel> itemLineParcels) {
+        this.itemLineParcels = itemLineParcels;
+    }
+   
 	@Override
 	public String toString() {
-		return "Parcel [Reference = " + getReference() + ",Created at= "+getCreatedAt()+"]";
+		return "Parcel [id=" + id + ", width=" + width + ", length=" + length + "]";
 	}
+
+
 }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="3.0"
+	xmlns="https://jakarta.ee/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd">
+    <persistence-unit name="UP_WAREHOUSE_TEST" transaction-type="RESOURCE_LOCAL">
+        <class>com.wh.reception.domain.Reception</class>
+        <class>com.wh.reception.domain.Parcel</class>
+        <class>com.wh.reception.domain.Palette</class>
+        <class>com.wh.reception.domain.Item</class>
+        <class>com.wh.reception.domain.ItemLineParcel</class>
+        <class>com.wh.reception.domain.ItemLinePalette</class>
+        <class>com.wh.reception.domain.Category</class>
+        <class>com.wh.reception.domain.Dimension</class>
+        <properties>
+            <property name="javax.persistence.jdbc.url" value="jdbc:h2:~/testdb;DB_CLOSE_ON_EXIT=FALSE"/>
+            <property name="javax.persistence.jdbc.driver" value="org.h2.Driver"/>
+            <property name="javax.persistence.jdbc.user" value="sa"/>
+            <property name="javax.persistence.jdbc.password" value=""/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+        </properties>
+    </persistence-unit>
+</persistence>
+<!--             <property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test;DB_CLOSE_DELAY=-1"/> -->

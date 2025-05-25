@@ -4,4 +4,4 @@
 /**
  * 
  */
-package com.wh.reception.domain;
+package com.wh.reception.services;

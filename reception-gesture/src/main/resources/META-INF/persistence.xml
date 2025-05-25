@@ -8,19 +8,23 @@
 		transaction-type="JTA">
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 		<jta-data-source>java:/WarehouseDS</jta-data-source>
+	
+		<class>com.wh.reception.domain.Reception</class>
+		<class>com.wh.reception.domain.AbstractCargo</class>
 		<class>com.wh.reception.domain.Category</class>
 		<class>com.wh.reception.domain.Dimension</class>
 		<class>com.wh.reception.domain.Item</class>
-		<class>com.wh.reception.domain.ItemLineReception</class>
-		<class>com.wh.reception.domain.Reception</class>
+		<class>com.wh.reception.domain.ItemLinePalette</class>
+		<class>com.wh.reception.domain.ItemLinePalettePK</class>
+		<class>com.wh.reception.domain.ItemLineParcel</class>
+		<class>com.wh.reception.domain.ItemLineParcelPK</class>
 		<class>com.wh.reception.domain.Palette</class>
 		<class>com.wh.reception.domain.Parcel</class>
-		<class>com.wh.reception.domain.ItemLineReception_PK</class>
 		<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 			<property name="jakarta.persistence.sharedCache.mode" value="ALL" />
 			<property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect" />
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
+			<property name="hibernate.hbm2ddl.auto" value="update" />
 			<property name="hibernate.show_sql" value="true" />
 		</properties>
 	</persistence-unit>
