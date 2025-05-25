@@ -2,7 +2,8 @@ package com.wh.reception.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
@@ -34,18 +35,18 @@ class ServiceDimensionTest {
 
 	@BeforeAll
 	void startH2Console() throws SQLException {
-		if (Boolean.getBoolean("h2.console.enabled")) {
+		//if (Boolean.getBoolean("h2.console.enabled")) {
 			h2WebServer = Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082").start();
 			System.out.println("Console H2 démarrée à : " + h2WebServer.getURL());
-		}
+		//}
 	}
 
 	@AfterAll
 	void stopH2Console() {
-		if (h2WebServer != null) {
+		//if (h2WebServer != null) {
 			h2WebServer.stop();
 			System.out.println("Console H2 arrêtée.");
-		}
+		//}
 	}
 
 	@BeforeEach
@@ -93,7 +94,7 @@ class ServiceDimensionTest {
 	@DisplayName("Ajouter une dimension") // IllegalStateException
 	void testAddDimension() {
 
-		Dimension dimension = new Dimension();
+		Dimension dimension = addTestDimension();
 		dimension.setLabel(null);
 		dimension.setWidth(100);
 		dimension.setLength(200);
@@ -104,7 +105,7 @@ class ServiceDimensionTest {
 		} catch (IllegalArgumentException e) {
 			assertEquals("The dimension label cannot be null or empty.", e.getMessage());
 		}
-		pauseServer();
+		//pauseServer();
 		dimension.setLabel("");
 		dimension.setWidth(100);
 		dimension.setLength(200);
@@ -176,6 +177,7 @@ class ServiceDimensionTest {
 	void testUpdateDimension() {
 		Dimension dimension = addTestDimension();
 
+		
 		dimension.setLabel("UpdatedLabelDimension");
 		dimension.setWidth(101);
 		dimension.setLength(201);
@@ -208,12 +210,10 @@ class ServiceDimensionTest {
 		service.deleteDimension(dimension.getId());
 		em.getTransaction().commit();
 
-		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-			service.findAllDimensions();
-		});
-		assertEquals("No dimensions found", exception.getMessage(),
-				"Une exception devrait être levée si la dimension n'existe pas");
-		
+		assertNull(em.find(Dimension.class, dimension.getId()), "La dimension devrait être supprimée");
+
+		pauseServer();
+
 		try {
 			service.deleteDimension(dimension.getId());
 			fail("IllegalArgumentException expected");
