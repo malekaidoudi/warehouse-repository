@@ -112,7 +112,7 @@ class ServiceParcelTest {
 		Reception savedReception = serviceReception.createReception(reception);
 		em.getTransaction().commit();
 
-		 pauseServer();
+		 //pauseServer();
 
 		return savedReception;
 	}

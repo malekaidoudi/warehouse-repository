@@ -5,9 +5,10 @@ import java.util.logging.Logger;
 
 import com.wh.reception.domain.Dimension;
 
+import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-
+@Stateless
 public class ServiceDimensionImp implements ServiceDimension {
 
 	Logger logger = Logger.getLogger("RECEPTION_SERVICE");

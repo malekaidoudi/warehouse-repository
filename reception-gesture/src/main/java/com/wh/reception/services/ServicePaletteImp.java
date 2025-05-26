@@ -7,10 +7,11 @@ import java.util.logging.Logger;
 import com.wh.reception.domain.Palette;
 import com.wh.reception.domain.Reception;
 
+import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
-
+@Stateless
 public class ServicePaletteImp implements ServicePalette {
 	// palette without items
 	Logger logger = Logger.getLogger("RECEPTION_SERVICE");

@@ -5,10 +5,11 @@ import java.util.logging.Logger;
 
 import com.wh.reception.domain.Category;
 
+import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
-
+@Stateless
 public class ServiceCategoriesImp implements ServiceCategories {
 	
 	Logger logger = Logger.getLogger("RECEPTION_SERVICE");
@@ -63,6 +64,7 @@ public class ServiceCategoriesImp implements ServiceCategories {
 		
 		if (categories.isEmpty()) {
 			logger.warning("No categories found");
+			return null;
 		} else {
 			logger.info("Found " + categories.size() + " categories");
 		}

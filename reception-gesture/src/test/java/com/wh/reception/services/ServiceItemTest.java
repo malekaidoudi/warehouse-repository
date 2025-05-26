@@ -147,7 +147,7 @@ class ServiceItemTest {
 		assertEquals("Test Description", foundItem.getDescription(), "La description de l'élément ne correspond pas");
 		assertEquals(1.0, foundItem.getWeight(), "Le poids de l'élément ne correspond pas");
 		
-		pauseServer();
+		//pauseServer();
 	}
 
 	@Test
@@ -176,7 +176,7 @@ class ServiceItemTest {
 		assertEquals("Updated Description", updatedItem.getDescription(), "La description de l'élément mis à jour ne correspond pas");
 		assertEquals(2.0, updatedItem.getWeight(), "Le poids de l'élément mis à jour ne correspond pas");
 		
-		pauseServer();
+		//pauseServer();
 		
 		item.setId(item.getId()+1L);
 		try {
@@ -209,7 +209,7 @@ class ServiceItemTest {
 		Item deletedItem = em.find(Item.class, item.getId());
 		assertEquals(null, deletedItem, "L'élément n'a pas été supprimé de la base de données");
 		
-		pauseServer();
+		//pauseServer();
 		
 		try {
 			em.getTransaction().begin();
@@ -245,7 +245,7 @@ class ServiceItemTest {
 		assertNotNull(items, "La liste des éléments ne doit pas être nulle");
 		assertEquals(2, items.size(), "La liste des éléments doit contenir deux éléments");
 		
-		pauseServer();
+		//pauseServer();
 		
 	}
 

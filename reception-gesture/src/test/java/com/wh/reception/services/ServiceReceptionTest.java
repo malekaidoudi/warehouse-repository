@@ -253,7 +253,7 @@ class ServiceReceptionTest {
 		em.getTransaction().begin();
 		service.createReception(reception);
 		em.getTransaction().commit();
-		pauseServer();
+		//pauseServer();
 		List<Parcel> parcels = service.findAllParcels(reception.getId());
 
 		assertNotNull(parcels, "La liste des colis ne devrait pas être nulle");
@@ -303,7 +303,7 @@ class ServiceReceptionTest {
 		service.createReception(reception);
 		em.getTransaction().commit();
 	
-		pauseServer();	
+		//pauseServer();	
 		List<Palette> palettes = service.findAllPalettes(reception.getId());
 		assertNotNull(palettes, "La liste des palettes ne devrait pas être nulle");
 		assertTrue(palettes.isEmpty(), "La liste des palettes devrait être vide");
@@ -346,7 +346,7 @@ class ServiceReceptionTest {
         em.persist(ilpal1);
 
         em.getTransaction().commit();
-        pauseServer();
+        //pauseServer();
        
         List<Item> items = service.findItemsByReceptionId(reception.getId());
         assertEquals(2, items.size());

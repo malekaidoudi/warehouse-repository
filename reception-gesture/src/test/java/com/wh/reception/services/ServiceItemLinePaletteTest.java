@@ -134,7 +134,7 @@ class ServiceItemLinePaletteTest {
 		assertNotNull(itemLinePalette);
 		assertEquals(10, itemLinePalette.getQuantity());
 
-		pauseServer();
+		//pauseServer();
 	}
 
 	@Test
@@ -173,7 +173,7 @@ class ServiceItemLinePaletteTest {
 		assertNotNull(updatedItemLinePalette);
 		assertEquals(20, updatedItemLinePalette.getQuantity());
 
-		pauseServer();
+		//pauseServer();
 	}
 
 	@Test
@@ -216,7 +216,7 @@ class ServiceItemLinePaletteTest {
 		
 		assertEquals(null, deletedItemLinePalette);
 		
-		pauseServer();
+		//pauseServer();
 	}
 	@Test
 	@DisplayName("Lister tout les articles dans une palette")
@@ -250,7 +250,7 @@ class ServiceItemLinePaletteTest {
 		
 		assertEquals(2, service.findAllItemsInPalette(palette.getId()).size());
 		
-		pauseServer();
+		//pauseServer();
 		
 	}
 

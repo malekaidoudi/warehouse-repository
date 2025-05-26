@@ -7,9 +7,10 @@ import java.util.logging.Logger;
 import com.wh.reception.domain.Parcel;
 import com.wh.reception.domain.Reception;
 
+import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-
+@Stateless
 public class ServiceParcelImp implements ServiceParcel {
 	
 	// parcel without items

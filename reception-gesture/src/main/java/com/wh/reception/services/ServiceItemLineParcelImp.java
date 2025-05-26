@@ -7,9 +7,10 @@ import com.wh.reception.domain.Item;
 import com.wh.reception.domain.ItemLineParcel;
 import com.wh.reception.domain.ItemLineParcelPK;
 
+import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-
+@Stateless
 public class ServiceItemLineParcelImp implements ServiceItemLineParcel {
 
 	Logger logger = Logger.getLogger("RECEPTION_SERVICE");

@@ -2,6 +2,7 @@ package com.wh.reception.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
@@ -90,7 +91,7 @@ class ServiceCategoriesTest {
 			assertEquals("The category label cannot be empty.", e.getMessage());
 		}
 
-		pauseServer();
+		//pauseServer();
 
 		category.setLabel("ab");
 		category.setDescription("Test description");
@@ -102,7 +103,7 @@ class ServiceCategoriesTest {
 			assertEquals("The category label must be between 3 and 50 characters.", e.getMessage());
 		}
 
-		pauseServer();
+		//pauseServer();
 
 		category.setLabel("a".repeat(51));
 		category.setDescription("Test description");
@@ -114,7 +115,7 @@ class ServiceCategoriesTest {
 			assertEquals("The category label must be between 3 and 50 characters.", e.getMessage());
 		}
 
-		pauseServer();
+		//pauseServer();
 
 		category.setLabel("TestCategory");
 		category.setDescription("ab");
@@ -126,7 +127,7 @@ class ServiceCategoriesTest {
 			assertEquals("The category description must be between 3 and 50 characters.", e.getMessage());
 		}
 
-		pauseServer();
+		//pauseServer();
 
 		category.setLabel("TestCategory");
 		category.setDescription("a".repeat(51));
@@ -138,7 +139,7 @@ class ServiceCategoriesTest {
 			assertEquals("The category description must be between 3 and 50 characters.", e.getMessage());
 		}
 
-		pauseServer();
+		//pauseServer();
 
 		category.setLabel("TestCategory");
 		category.setDescription("Test description");
@@ -173,7 +174,7 @@ class ServiceCategoriesTest {
 		assertEquals("UpdatedDescriptionCategory", category.getDescription(),
 				"La description de la catégorie devrait être mis à jour");
 
-		pauseServer();
+		////pauseServer();
 		
 		category.setId(category.getId()+1L);
 		
@@ -195,17 +196,13 @@ class ServiceCategoriesTest {
 		em.getTransaction().begin();
 		service.addCategory(category);
 		em.getTransaction().commit();
-
+//pauseServer();
 		em.getTransaction().begin();
 		service.deleteCategory(category.getId());
 		em.getTransaction().commit();
 		
-		try {
-			service.findAllCategories();
-			fail("IllegalArgumentException expected");
-		} catch (IllegalArgumentException e) {
-			assertEquals("No categories found", e.getMessage(), "La catégorie devrait être supprimée");
-		}
+		assertNull(service.findAllCategories(), "La catégorie devrait être supprimée");
+		
 		
 		try {
 			service.deleteCategory(category.getId());

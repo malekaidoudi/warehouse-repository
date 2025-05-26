@@ -19,7 +19,7 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-		<!--		fournit le moteur de base de données H2 et son pilote JDBC-->
+			<!--		fournit le moteur de base de données H2 et son pilote JDBC-->
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<version>2.2.224</version>
@@ -32,19 +32,25 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-            <groupId>jakarta.json.bind</groupId>
-            <artifactId>jakarta.json.bind-api</artifactId>
-            <version>3.0.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-    <groupId>org.eclipse</groupId>
-    <artifactId>yasson</artifactId>
-    <version>3.0.4</version>
-    <scope>test</scope>
-</dependency>
+			<groupId>jakarta.json.bind</groupId>
+			<artifactId>jakarta.json.bind-api</artifactId>
+			<version>3.0.0</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
-<!--fournit l’implémentation JPA utilisée dans les tests unitaires-->
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.7.5</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse</groupId>
+			<artifactId>yasson</artifactId>
+			<version>3.0.4</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<!--fournit l’implémentation JPA utilisée dans les tests unitaires-->
 			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<version>6.1.5.Final</version>
@@ -63,7 +69,7 @@
 				</configuration>
 			</plugin>
 			<plugin>
-			<!--le responsable de l’exécution des tests unitaires pendant la phase test du cycle de vie Maven.-->
+				<!--le responsable de l’exécution des tests unitaires pendant la phase test du cycle de vie Maven.-->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>3.2.5</version>

@@ -126,7 +126,7 @@ class ServiceItemLineParcelTest {
 		assertEquals(parcel, itemLineParcel.getParcel());
 		assertEquals("Test Item", itemLineParcel.getItem().getLabel());
 
-		pauseServer();
+		//pauseServer();
 	}
 
 	@Test
@@ -152,7 +152,7 @@ class ServiceItemLineParcelTest {
 
 		assertEquals(10, itemLineParcel.getQuantity());
 
-		pauseServer();
+		//pauseServer();
 	}
 	@Test
 	@DisplayName("Test de suppression d'une ligne de parcel")
@@ -176,7 +176,7 @@ class ServiceItemLineParcelTest {
 
 		assertEquals(null, em.find(ItemLineParcel.class, itemLineParcel.getId()));
 
-		pauseServer();
+		//pauseServer();
 	}
 	@Test
 	@DisplayName("Test de recherche d'un article dans un parcel")
@@ -201,7 +201,7 @@ class ServiceItemLineParcelTest {
 		assertNotNull(foundItem);
 		assertEquals("Test Item", foundItem.getLabel());
 
-		pauseServer();
+		//pauseServer();
 	}
 	
 	@Test
@@ -231,7 +231,7 @@ class ServiceItemLineParcelTest {
 
 		assertEquals(2, service.findAllItemsInParcel(parcel.getId()).size());
 
-		pauseServer();
+		//pauseServer();
 	}
 
 }

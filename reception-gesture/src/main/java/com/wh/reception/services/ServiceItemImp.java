@@ -5,9 +5,10 @@ import java.util.logging.Logger;
 
 import com.wh.reception.domain.Item;
 
+import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-
+@Stateless
 public class ServiceItemImp implements ServiceItem {
 	
 

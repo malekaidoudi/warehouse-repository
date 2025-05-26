@@ -35,18 +35,18 @@ class ServiceDimensionTest {
 
 	@BeforeAll
 	void startH2Console() throws SQLException {
-		//if (Boolean.getBoolean("h2.console.enabled")) {
+		if (Boolean.getBoolean("h2.console.enabled")) {
 			h2WebServer = Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082").start();
 			System.out.println("Console H2 démarrée à : " + h2WebServer.getURL());
-		//}
+		}
 	}
 
 	@AfterAll
 	void stopH2Console() {
-		//if (h2WebServer != null) {
+		if (h2WebServer != null) {
 			h2WebServer.stop();
 			System.out.println("Console H2 arrêtée.");
-		//}
+		}
 	}
 
 	@BeforeEach
@@ -116,7 +116,7 @@ class ServiceDimensionTest {
 		} catch (IllegalArgumentException e) {
 			assertEquals("The dimension label cannot be null or empty.", e.getMessage());
 		}
-		pauseServer();
+		//pauseServer();
 		dimension.setLabel("ab");
 		dimension.setWidth(100);
 		dimension.setLength(200);
@@ -127,7 +127,7 @@ class ServiceDimensionTest {
 		} catch (IllegalArgumentException e) {
 			assertEquals("The label must be between 3 and 50 characters.", e.getMessage());
 		}
-		pauseServer();
+		//pauseServer();
 		dimension.setLabel("a".repeat(51));
 		dimension.setWidth(100);
 		dimension.setLength(200);
@@ -139,7 +139,7 @@ class ServiceDimensionTest {
 			assertEquals("The label must be between 3 and 50 characters.", e.getMessage());
 		}
 
-		pauseServer();
+		//pauseServer();
 		dimension.setLabel("TestDimension");
 		dimension.setWidth(-1);
 		dimension.setLength(200);
@@ -150,7 +150,7 @@ class ServiceDimensionTest {
 		} catch (IllegalArgumentException e) {
 			assertEquals("The width must be positive and be greater than 1.", e.getMessage());
 		}
-		pauseServer();
+		//pauseServer();
 		dimension.setLabel("TestDimension");
 		dimension.setWidth(100);
 		dimension.setLength(50);
@@ -160,7 +160,7 @@ class ServiceDimensionTest {
 		} catch (IllegalArgumentException e) {
 			assertEquals("The length must be greater than the width.", e.getMessage());
 		}
-		pauseServer();
+		//pauseServer();
 
 		dimension.setLabel("TestDimension");
 		dimension.setWidth(100);
@@ -189,7 +189,7 @@ class ServiceDimensionTest {
 		assertEquals(101, dimension.getWidth(), "La largeur de la dimension devrait être mise à jour");
 		assertEquals(201, dimension.getLength(), "La longueur de la dimension devrait être mise à jour");
 
-		pauseServer();
+		//pauseServer();
 
 		dimension.setId(dimension.getId() + 1L);
 
@@ -212,7 +212,7 @@ class ServiceDimensionTest {
 
 		assertNull(em.find(Dimension.class, dimension.getId()), "La dimension devrait être supprimée");
 
-		pauseServer();
+		//pauseServer();
 
 		try {
 			service.deleteDimension(dimension.getId());
