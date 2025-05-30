@@ -71,5 +71,19 @@ public class ServiceDimensionImp implements ServiceDimension {
 		}
 		return dimensions;
 	}
+	
+	@Override
+	public Dimension findDimensionById(Long id) {
+		if (id == null) {
+			throw new IllegalArgumentException("Dimension ID cannot be null");
+		}
+		Dimension dimension = em.find(Dimension.class, id);
+		if (dimension == null) {
+			logger.warning("Dimension with ID " + id + " not found");
+			return null;
+		}
+		logger.info("Found dimension with id: " + id);
+		return dimension;
+	}
 
 }

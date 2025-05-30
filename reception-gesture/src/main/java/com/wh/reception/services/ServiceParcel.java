@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.wh.reception.domain.Parcel;
 
+import jakarta.ejb.Remote;
+
+@Remote
 public interface ServiceParcel {
 
 	/**
@@ -23,4 +26,8 @@ public interface ServiceParcel {
 		Parcel findParcelById(Long id);
 		
 		List<Parcel> findAllParcel(Long receptionId);
+		
+		List<Parcel> findParcelsByReceptionId(Long receptionId);
+		
+		List<Parcel> findParcelsByItemId(Long itemId);
 }

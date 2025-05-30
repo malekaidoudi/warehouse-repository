@@ -11,6 +11,7 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
+
 @Stateless
 public class ServicePaletteImp implements ServicePalette {
 	// palette without items
@@ -22,7 +23,8 @@ public class ServicePaletteImp implements ServicePalette {
 	public void setEntityManager(EntityManager em) {
 		this.em = em;
 	}
-@Override
+
+	@Override
 	public void addPalette(Palette palette) {
 		if (palette.getReception() == null) {
 			throw new IllegalArgumentException("A palette must be associated with a valid reception.");
@@ -84,24 +86,59 @@ public class ServicePaletteImp implements ServicePalette {
 		}
 		return palette;
 	}
+
 	@Override
 	public List<Palette> findAllPalettes(Long receptionId) {
-		
-		    if (receptionId == null) {
-		        throw new IllegalArgumentException("Reception ID cannot be null");
-		    }
-		    TypedQuery<Palette> query = em.createQuery(
-		        "SELECT p FROM Palette p WHERE p.reception.id = :receptionId", Palette.class);
-		    query.setParameter("receptionId", receptionId);
-		    
-		    List<Palette> palettes = query.getResultList();
-		    
-		    if (palettes.isEmpty()) {
-		        logger.warning("No palettes found for reception ID: " + receptionId);
-		    } else {
-		        logger.info("Found " + palettes.size() + " palettes for reception ID: " + receptionId);
-		    }
-		    return palettes;
+
+		if (receptionId == null) {
+			throw new IllegalArgumentException("Reception ID cannot be null");
 		}
+		TypedQuery<Palette> query = em.createQuery("SELECT p FROM Palette p WHERE p.reception.id = :receptionId",
+				Palette.class);
+		query.setParameter("receptionId", receptionId);
+
+		List<Palette> palettes = query.getResultList();
+
+		if (palettes.isEmpty()) {
+			logger.warning("No palettes found for reception ID: " + receptionId);
+		} else {
+			logger.info("Found " + palettes.size() + " palettes for reception ID: " + receptionId);
+		}
+		return palettes;
+	}
+	
+	@Override
+	public List<Palette> findPalettesByReceptionId(Long receptionId) {
+		if (receptionId == null) {
+			throw new IllegalArgumentException("Reception ID cannot be null");
+		}
+		TypedQuery<Palette> query = em.createQuery("SELECT p FROM Palette p WHERE p.reception.id = :receptionId",
+				Palette.class);
+		query.setParameter("receptionId", receptionId);
+		List<Palette> palettes = query.getResultList();
+		if (palettes.isEmpty()) {
+			logger.warning("No palettes found for reception ID: " + receptionId);
+		} else {
+			logger.info("Found " + palettes.size() + " palettes for reception ID: " + receptionId);
+		}
+		return palettes;
+	}
+	
+	@Override
+	public List<Palette> findPalettesByItemId(Long itemId) {
+		if (itemId == null) {
+			throw new IllegalArgumentException("Item ID cannot be null");
+		}
+		TypedQuery<Palette> query = em.createQuery("SELECT p FROM Palette p JOIN p.items i WHERE i.id = :itemId",
+				Palette.class);
+		query.setParameter("itemId", itemId);
+		List<Palette> palettes = query.getResultList();
+		if (palettes.isEmpty()) {
+			logger.warning("No palettes found for item ID: " + itemId);
+		} else {
+			logger.info("Found " + palettes.size() + " palettes for item ID: " + itemId);
+		}
+		return palettes;
+	}
 
 }

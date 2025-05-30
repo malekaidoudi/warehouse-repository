@@ -1,21 +1,32 @@
 package com.wh.reception.rest;
 
+import java.util.List;
+
 import com.wh.reception.domain.Category;
 import com.wh.reception.services.ServiceCategories;
-import jakarta.inject.Inject;
-import jakarta.ws.rs.*;
+import com.wh.utilities.Locator;
+
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.DELETE;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
+import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import java.util.List;
 
 @Path("/categories")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class CategoryResource {
-
-    @Inject
-    private ServiceCategories serviceCategories;
-
+	
+   
+	ServiceCategories serviceCategories= 
+		(ServiceCategories) Locator.lookup("ServiceCategoriesImp", ServiceCategories.class);
+ 
+	
     @POST
     public Response createCategory(Category category) {
         try {
@@ -73,4 +84,5 @@ public class CategoryResource {
         }
         return Response.ok(category).build();
     }
+    
 }

@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.wh.reception.domain.Item;
 import com.wh.reception.domain.Palette;
 import com.wh.reception.domain.Parcel;
 import com.wh.reception.domain.Reception;
@@ -122,89 +121,7 @@ public class ServiceReceptionImp implements ServiceReception {
 		}
 		return parcel.getReception();
 	}
-
-	@Override
-	public List<Palette> findAllPalettes(Long receptionId) {
-		if (receptionId == null) {
-			throw new IllegalArgumentException("Reception ID cannot be null");
-		}
-		TypedQuery<Palette> query = em.createQuery(
-				"SELECT p FROM Palette p WHERE p.reception.id = :receptionId", Palette.class);
-		query.setParameter("receptionId", receptionId);
-		List<Palette> palettes= query.getResultList();
-		if (palettes.isEmpty()) {
-			logger.info("No palettes found for reception ID " + receptionId);
-		} else {
-			logger.info("Palettes found for reception ID " + receptionId + ": " + palettes.size());
-		}
-		return palettes;
-	}
 	
-	@Override
-	public List<Parcel> findAllParcels(Long receptionId) {
-
-		    if (receptionId == null) {
-		        throw new IllegalArgumentException("Reception ID cannot be null");
-		    }
-		    TypedQuery<Parcel> query = em.createQuery(
-		        "SELECT p FROM Parcel p WHERE p.reception.id = :receptionId", Parcel.class);
-		    query.setParameter("receptionId", receptionId);
-		    
-		    List<Parcel> parcels = query.getResultList();
-		    
-		    if (parcels.isEmpty()) {
-		        logger.info("No parcels found for reception ID " + receptionId);
-		    } else {
-		        logger.info("Parcels found for reception ID " + receptionId + ": " + parcels.size());
-		    }
-		    return parcels;
-		}
-	@Override
-	public List<Item> findItemsByReceptionId(Long receptionId) {
-        if (receptionId == null) {
-            throw new IllegalArgumentException("Reception ID cannot be null");
-        }
-
-        TypedQuery<Item> query = em.createQuery(
-            "SELECT DISTINCT i " +
-            "FROM Item i " +
-            "WHERE EXISTS (" +
-            "    SELECT 1 FROM Reception r " +
-            "    JOIN r.parcels p " +
-            "    JOIN p.itemLineParcels ilp " +
-            "    WHERE ilp.item = i AND r.id = :receptionId" +
-            ") OR EXISTS (" +
-            "    SELECT 1 FROM Reception r " +
-            "    JOIN r.palettes pal " +
-            "    JOIN pal.itemLinePalettes ilpal " +
-            "    WHERE ilpal.item = i AND r.id = :receptionId" +
-            ")",
-            Item.class
-        );
-        query.setParameter("receptionId", receptionId);
-        return query.getResultList();
-    }
-
-//	@Override
-//	public List<Item> findItemsByReceptionId(Long receptionId) {
-//		if (receptionId == null) {
-//			throw new IllegalArgumentException("Reception ID cannot be null");
-//		}
-//		 String req = "SELECT i FROM Item i "
-//				+ "JOIN i.palettes p WHERE p.reception.id = :receptionId "
-//				+ "UNION "
-//				+ "SELECT i FROM Item i "
-//				+ "JOIN i.parcels pa WHERE pa.reception.id = :receptionId";
-//		List <Item> items = em.createQuery(req, Item.class)
-//				.setParameter("receptionId", receptionId)
-//				.getResultList();
-//		if (items.isEmpty()) {
-//			logger.info("No items found for reception ID " + receptionId);
-//		} else {
-//			logger.info("Items found for reception ID " + receptionId + ": " + items.size());
-//		}
-//		return items;
-//	}
 	
 	@Override
 	public List<Reception> findAllReceptions() {

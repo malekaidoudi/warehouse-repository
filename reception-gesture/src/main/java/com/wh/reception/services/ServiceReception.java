@@ -2,9 +2,6 @@ package com.wh.reception.services;
 
 import java.util.List;
 
-import com.wh.reception.domain.Item;
-import com.wh.reception.domain.Palette;
-import com.wh.reception.domain.Parcel;
 import com.wh.reception.domain.Reception;
 
 import jakarta.ejb.Remote;
@@ -35,13 +32,6 @@ public interface ServiceReception {
 	Reception findReceptionByParcelId(Long parcelId);
 
 	Reception findReceptionByPaletteId(Long paletteId);
-	
-
-	List<Palette> findAllPalettes(Long receptionId);
-	
-	List<Parcel> findAllParcels(Long receptionId);
-	
-	List<Item> findItemsByReceptionId(Long receptionId);
 
 	List<Reception> findAllReceptions();
 	

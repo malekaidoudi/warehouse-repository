@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.wh.reception.domain.Item;
 
+import jakarta.ejb.Remote;
+
+@Remote
 public interface ServiceItem {
 	
 	/**
@@ -16,17 +19,20 @@ public interface ServiceItem {
 	 * 
 	 */
 
-	
-	
-	
 		void addItem(Item item);
 		
 		void updateItem(Item item);
 		
 		void deleteItem(Long id);
 		
+		Item findItemById(Long id);
+
 		List<Item> findAllItems();
 		
+		List<Item> findItemsByPaletteId(Long paletteId);
 		
+		List<Item> findItemsByParcelId(Long parcelId);
+		
+		List<Item> findItemsByReceptionId(Long receptionId);
 
 }

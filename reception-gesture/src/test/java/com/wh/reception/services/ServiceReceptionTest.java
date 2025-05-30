@@ -4,12 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -22,9 +19,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
-import com.wh.reception.domain.Item;
-import com.wh.reception.domain.ItemLinePalette;
-import com.wh.reception.domain.ItemLineParcel;
 import com.wh.reception.domain.Palette;
 import com.wh.reception.domain.Parcel;
 import com.wh.reception.domain.Reception;
@@ -75,16 +69,16 @@ class ServiceReceptionTest {
 		}
 	}
 
-	private void pauseServer() {
-		// Pause le serveur H2 pour permettre à l'utilisateur de consulter la console
-		System.out.println(
-				"Test en pause. Consultez la console H2 à http://localhost:8082. Appuyez sur Entrée pour continuer...");
-		try {
-			System.in.read();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+//	private void pauseServer() {
+//		// Pause le serveur H2 pour permettre à l'utilisateur de consulter la console
+//		System.out.println(
+//				"Test en pause. Consultez la console H2 à http://localhost:8082. Appuyez sur Entrée pour continuer...");
+//		try {
+//			System.in.read();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	
 
@@ -219,159 +213,5 @@ class ServiceReceptionTest {
 		Reception found = service.findReceptionByParcelId(parcel.getId());
 		assertEquals(reception.getId(), found.getId(), "La réception devrait correspondre à celle du colis");
 	}
-
-	@Test
-	@DisplayName("Récupérer tous les colis d'une réception")
-	void testFindAllParcels_Success() {
-		Reception reception = createTestReception();
-		Parcel parcel = reception.getParcels().get(0);
-
-		List<Parcel> parcels = service.findAllParcels(reception.getId());
-
-		assertNotNull(parcels, "La liste des colis ne devrait pas être nulle");
-		assertEquals(1, parcels.size(), "La réception devrait contenir un colis");
-		assertEquals(parcel.getId(), parcels.get(0).getId(), "L'ID du colis devrait correspondre");
-	}
-
-	@Test
-	@DisplayName("Récupérer aucun colis pour une réception sans colis")
-	void testFindAllParcels_EmptyList() {
-		Reception reception = new Reception("TestInitiator", "TestShiper", "TestConsignee",
-				"123 Shipping St, 75001 Paris", "456 Delivery St, 75001 Paris");
-		reception.setCreatedAt(new Date());
-		reception.setUpdatedAt(new Date());
-
-		Palette palette = new Palette();
-		palette.setReception(reception);
-		palette.setHeight(100.0);
-		palette.setWeight(50.0);
-		palette.setDeliveryDate(LocalDate.now().plusDays(2));
-		palette.setCreatedAt(new Date());
-		palette.setUpdatedAt(new Date());
-		reception.getPalettes().add(palette);
-
-		em.getTransaction().begin();
-		service.createReception(reception);
-		em.getTransaction().commit();
-		//pauseServer();
-		List<Parcel> parcels = service.findAllParcels(reception.getId());
-
-		assertNotNull(parcels, "La liste des colis ne devrait pas être nulle");
-		assertTrue(parcels.isEmpty(), "La liste des colis devrait être vide");
-	}
-
-	@Test
-	@DisplayName("Échouer la récupération des colis avec un ID de réception nul")
-	void testFindAllParcels_NullId() {
-		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-			service.findAllParcels(null);
-		});
-		assertEquals("Reception ID cannot be null", exception.getMessage());
-	}
-	@Test
-	@DisplayName("Récupérer toutes les palettes d'une réception")
-	void testFindAllPalettes_Success() {
-		Reception reception = createTestReception();
-		Palette palette = reception.getPalettes().get(0);
-
-		List<Palette> palettes = service.findAllPalettes(reception.getId());
-
-		assertNotNull(palettes, "La liste des palettes ne devrait pas être nulle");
-		assertEquals(1, palettes.size(), "La réception devrait contenir une palette");
-		assertEquals(palette.getId(), palettes.get(0).getId(), "L'ID de la palette devrait correspondre");
-	}
-
-	@Test
-	@DisplayName("Récupérer aucune palette pour une réception sans palette")
-	void testFindAllPalettes_EmptyList() {
-		Reception reception = new Reception("TestInitiator", "TestShiper", "TestConsignee",
-				"123 Shipping St, 75001 Paris", "456 Delivery St, 75001 Paris");
-		reception.setCreatedAt(new Date());
-		reception.setUpdatedAt(new Date());
-
-		Parcel parcel = new Parcel();
-		parcel.setReception(reception);
-		parcel.setWidth(100.0);
-		parcel.setLength(200.0);
-		parcel.setWeight(10.5);
-		parcel.setDeliveryDate(LocalDate.now().plusDays(1));
-		parcel.setCreatedAt(new Date());
-		parcel.setUpdatedAt(new Date());
-		reception.getParcels().add(parcel);
-
-		em.getTransaction().begin();
-		service.createReception(reception);
-		em.getTransaction().commit();
-	
-		//pauseServer();	
-		List<Palette> palettes = service.findAllPalettes(reception.getId());
-		assertNotNull(palettes, "La liste des palettes ne devrait pas être nulle");
-		assertTrue(palettes.isEmpty(), "La liste des palettes devrait être vide");
-		
-	}
-	@Test
-	@DisplayName("Échouer la récupération des palettes avec un ID de réception nul")
-	void testFindAllPalettes_NullId() {
-		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-			service.findAllPalettes(null);
-		});
-		assertEquals("Reception ID cannot be null", exception.getMessage());
-	}
-	
-	@Test
-	@DisplayName("Récupérer les items d'une réception")
-    void testFindItemsByReceptionId() {
-        // Create items
-        Item item1 = new Item("Item Test 1", "Test Description 1", 1.0);
-        Item item2 = new Item("Item Test 2", "Test Description 2", 2.0);
-        em.persist(item1);
-        em.persist(item2);
-
-        // Create reception
-        Reception reception = createTestReception();
-        
-        em.getTransaction().begin();
-        // Link items to parcel
-        ItemLineParcel ilp1 = new ItemLineParcel(2);
-        ilp1.setItem(item1);
-        ilp1.setParcel(reception.getParcels().get(0));
-        ilp1.setQuantity(10);
-        em.persist(ilp1);
-
-        // Link items to palette
-        ItemLinePalette ilpal1 = new ItemLinePalette(3);
-        ilpal1.setItem(item2);
-        ilpal1.setPalette(reception.getPalettes().get(0));
-        ilpal1.setQuantity(100);
-        em.persist(ilpal1);
-
-        em.getTransaction().commit();
-        //pauseServer();
-       
-        List<Item> items = service.findItemsByReceptionId(reception.getId());
-        assertEquals(2, items.size());
-        assertTrue(items.containsAll(Arrays.asList(item1, item2)));
-    }
-
-    @Test
-    @DisplayName("Récupérer aucun item pour une réception sans item")
-    void testFindItemsByReceptionId_EmptyReception() {
-        Reception reception = createTestReception();
-        List<Item> items = service.findItemsByReceptionId(reception.getId());
-        assertTrue(items.isEmpty());
-    }
-
-    @Test
-    @DisplayName("Échouer la récupération des items avec un ID de réception inexistant")
-    void testFindItemsByReceptionId_NonExistentReception() {
-        List<Item> items = service.findItemsByReceptionId(999L);
-        assertTrue(items.isEmpty());
-    }
-
-    @Test
-    @DisplayName("Échouer la récupération des items avec un ID de réception nul")
-    void testFindItemsByReceptionId_NullId() {
-        assertThrows(IllegalArgumentException.class, () -> service.findItemsByReceptionId(null));
-    }
 	
 }

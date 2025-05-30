@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.wh.reception.domain.Item;
 
+import jakarta.ejb.Remote;
+
+@Remote
 public interface ServiceItemLineParcel {
 	
 	/**

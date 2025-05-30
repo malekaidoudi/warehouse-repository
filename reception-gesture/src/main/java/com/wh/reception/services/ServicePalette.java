@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.wh.reception.domain.Palette;
 
+import jakarta.ejb.Remote;
+
+@Remote
 public interface ServicePalette {
 	
 		/**
@@ -24,5 +27,10 @@ public interface ServicePalette {
 		Palette findPaletteById(Long id);
 		
 		List<Palette> findAllPalettes(Long receptionId);
+		
+		List<Palette> findPalettesByReceptionId(Long receptionId);
+		
+		List<Palette> findPalettesByItemId(Long itemId);
+		
 
 }

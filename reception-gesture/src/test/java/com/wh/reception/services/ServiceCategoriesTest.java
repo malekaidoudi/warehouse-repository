@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -66,16 +65,16 @@ class ServiceCategoriesTest {
 		}
 	}
 
-	private void pauseServer() {
-		// Pause le serveur H2 pour permettre à l'utilisateur de voir les données
-		System.out.println(
-				"Test en pause. Consultez la console H2 à http://localhost:8082. Appuyez sur Entrée pour continuer...");
-		try {
-			System.in.read();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+//	private void pauseServer() {
+//		// Pause le serveur H2 pour permettre à l'utilisateur de voir les données
+//		System.out.println(
+//				"Test en pause. Consultez la console H2 à http://localhost:8082. Appuyez sur Entrée pour continuer...");
+//		try {
+//			System.in.read();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	@Test
 	@DisplayName("Ajouter une catégorie")
@@ -234,4 +233,26 @@ class ServiceCategoriesTest {
 		assertEquals(2, categories.size(), "Il devrait y avoir deux catégories");
 	}
 
+	@Test
+	@DisplayName("Récupérer une catégorie par ID")
+	void testFindCategoryById_success() {
+		Category category = new Category();
+		category.setLabel("TestCategory");
+		category.setDescription("Test description");
+
+		em.getTransaction().begin();
+		service.addCategory(category);
+		em.getTransaction().commit();
+
+		Category foundCategory = service.findCategoryById(category.getId());
+
+		assertNotNull(foundCategory, "La catégorie trouvée ne devrait pas être nulle");
+		assertEquals(category.getId(), foundCategory.getId(), "L'ID de la catégorie trouvée devrait correspondre");
+		assertEquals(category.getLabel(), foundCategory.getLabel(), "Le label de la catégorie trouvée devrait correspondre");
+		assertEquals(category.getDescription(), foundCategory.getDescription(),
+				"La description de la catégorie trouvée devrait correspondre");
+		
+		assertNull(service.findCategoryById(category.getId()+1L), "La recherche d'une catégorie avec ID null devrait retourner null");
+		
+	}
 }

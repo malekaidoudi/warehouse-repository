@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.wh.reception.domain.Category;
 
+import jakarta.ejb.Remote;
+
+@Remote
 public interface ServiceCategories {
 	
 	/**	
@@ -22,6 +25,8 @@ public interface ServiceCategories {
 		void deleteCategory(Long id);
 		
 		List<Category> findAllCategories();
+		
+		Category findCategoryById(Long id);
 		
 
 }

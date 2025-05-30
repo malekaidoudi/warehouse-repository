@@ -3,10 +3,8 @@ package com.wh.reception.services;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -67,16 +65,16 @@ class ServiceDimensionTest {
 		}
 	}
 
-	private void pauseServer() {
-		// Pause le serveur H2 pour permettre à l'utilisateur de voir les données
-		System.out.println(
-				"Test en pause. Consultez la console H2 à http://localhost:8082. Appuyez sur Entrée pour continuer...");
-		try {
-			System.in.read();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+//	private void pauseServer() {
+//		// Pause le serveur H2 pour permettre à l'utilisateur de voir les données
+//		System.out.println(
+//				"Test en pause. Consultez la console H2 à http://localhost:8082. Appuyez sur Entrée pour continuer...");
+//		try {
+//			System.in.read();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	Dimension addTestDimension() {
 		Dimension dimension = new Dimension();
@@ -105,7 +103,7 @@ class ServiceDimensionTest {
 		} catch (IllegalArgumentException e) {
 			assertEquals("The dimension label cannot be null or empty.", e.getMessage());
 		}
-		//pauseServer();
+		// pauseServer();
 		dimension.setLabel("");
 		dimension.setWidth(100);
 		dimension.setLength(200);
@@ -116,7 +114,7 @@ class ServiceDimensionTest {
 		} catch (IllegalArgumentException e) {
 			assertEquals("The dimension label cannot be null or empty.", e.getMessage());
 		}
-		//pauseServer();
+		// pauseServer();
 		dimension.setLabel("ab");
 		dimension.setWidth(100);
 		dimension.setLength(200);
@@ -127,7 +125,7 @@ class ServiceDimensionTest {
 		} catch (IllegalArgumentException e) {
 			assertEquals("The label must be between 3 and 50 characters.", e.getMessage());
 		}
-		//pauseServer();
+		// pauseServer();
 		dimension.setLabel("a".repeat(51));
 		dimension.setWidth(100);
 		dimension.setLength(200);
@@ -139,7 +137,7 @@ class ServiceDimensionTest {
 			assertEquals("The label must be between 3 and 50 characters.", e.getMessage());
 		}
 
-		//pauseServer();
+		// pauseServer();
 		dimension.setLabel("TestDimension");
 		dimension.setWidth(-1);
 		dimension.setLength(200);
@@ -150,7 +148,7 @@ class ServiceDimensionTest {
 		} catch (IllegalArgumentException e) {
 			assertEquals("The width must be positive and be greater than 1.", e.getMessage());
 		}
-		//pauseServer();
+		// pauseServer();
 		dimension.setLabel("TestDimension");
 		dimension.setWidth(100);
 		dimension.setLength(50);
@@ -160,7 +158,7 @@ class ServiceDimensionTest {
 		} catch (IllegalArgumentException e) {
 			assertEquals("The length must be greater than the width.", e.getMessage());
 		}
-		//pauseServer();
+		// pauseServer();
 
 		dimension.setLabel("TestDimension");
 		dimension.setWidth(100);
@@ -177,7 +175,6 @@ class ServiceDimensionTest {
 	void testUpdateDimension() {
 		Dimension dimension = addTestDimension();
 
-		
 		dimension.setLabel("UpdatedLabelDimension");
 		dimension.setWidth(101);
 		dimension.setLength(201);
@@ -189,7 +186,7 @@ class ServiceDimensionTest {
 		assertEquals(101, dimension.getWidth(), "La largeur de la dimension devrait être mise à jour");
 		assertEquals(201, dimension.getLength(), "La longueur de la dimension devrait être mise à jour");
 
-		//pauseServer();
+		// pauseServer();
 
 		dimension.setId(dimension.getId() + 1L);
 
@@ -212,7 +209,7 @@ class ServiceDimensionTest {
 
 		assertNull(em.find(Dimension.class, dimension.getId()), "La dimension devrait être supprimée");
 
-		//pauseServer();
+		// pauseServer();
 
 		try {
 			service.deleteDimension(dimension.getId());
@@ -244,5 +241,27 @@ class ServiceDimensionTest {
 
 		assertNotNull(dimensions, "La liste des dimensions ne devrait pas être nulle");
 		assertEquals(2, dimensions.size(), "Il devrait y avoir deux dimensions");
+	}
+
+	@Test
+	@DisplayName("Récupérer une dimension par ID")
+	void testFindDimensionById_success() {
+		Dimension dimension = addTestDimension();
+
+		Dimension foundDimension = service.findDimensionById(dimension.getId());
+
+		assertNotNull(foundDimension, "La dimension trouvée ne devrait pas être nulle");
+		assertEquals(dimension.getId(), foundDimension.getId(), "L'ID de la dimension trouvée devrait correspondre");
+		assertEquals(dimension.getLabel(), foundDimension.getLabel(),
+				"Le label de la dimension trouvée devrait correspondre");
+		assertEquals(dimension.getWidth(), foundDimension.getWidth(),
+				"La largeur de la dimension trouvée devrait correspondre");
+		assertEquals(dimension.getLength(), foundDimension.getLength(),
+				"La longueur de la dimension trouvée devrait correspondre");
+		assertNull(service.findDimensionById(dimension.getId() + 1L),
+				"La dimension avec un ID inexistant devrait être nulle");
+
+		// pauseServer();
+
 	}
 }

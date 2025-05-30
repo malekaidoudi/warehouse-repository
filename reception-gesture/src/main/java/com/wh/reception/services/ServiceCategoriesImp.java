@@ -71,5 +71,20 @@ public class ServiceCategoriesImp implements ServiceCategories {
 	
 		return categories;
 	}
+	
+	@Override
+	public Category findCategoryById(Long id) {
+		if (id == null) {
+			throw new IllegalArgumentException("Category ID cannot be null");
+		}
+		Category category = em.find(Category.class, id);
+		if (category == null) {
+			logger.warning("Category with ID " + id + " not found");
+			return null;
+		} else {
+			logger.info("Found category with id: " + id);
+			return category;
+		}
+	}
 
 }

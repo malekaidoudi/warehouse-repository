@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.wh.reception.domain.Dimension;
 
+import jakarta.ejb.Remote;
+
+@Remote
 public interface ServiceDimension {
 	
 		/**
@@ -19,6 +22,8 @@ public interface ServiceDimension {
 		void deleteDimension(Long id);
 		
 		List<Dimension> findAllDimensions();
+		
+		Dimension findDimensionById(Long id);
 		
 
 }

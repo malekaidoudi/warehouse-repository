@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import com.wh.reception.domain.Item;
 import com.wh.reception.domain.ItemLineParcel;
 import com.wh.reception.domain.ItemLineParcelPK;
+import com.wh.reception.domain.Parcel;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
@@ -24,12 +25,19 @@ public class ServiceItemLineParcelImp implements ServiceItemLineParcel {
 	
 	@Override
 	public void addItemToParcel(Long itemId, Long parcelId, int quantity) {
+		Item item = em.find(Item.class, itemId);
+		Parcel parcel = em.find(Parcel.class, parcelId);
+		if (item == null || parcel == null) {
+			throw new IllegalArgumentException("Item or Parcel not found.");
+		}
 		ItemLineParcel itemLineParcel = new ItemLineParcel();
-		itemLineParcel.setId(new ItemLineParcelPK(itemId, parcelId));
+		itemLineParcel.setItem(item);
+		itemLineParcel.setParcel(parcel);
 		itemLineParcel.setQuantity(quantity);
+		itemLineParcel.setId(new ItemLineParcelPK(itemId, parcelId));
 		em.persist(itemLineParcel);
-		
-		
+		logger.info("Item added to parcel successfully");
+
 	}
 
 	@Override

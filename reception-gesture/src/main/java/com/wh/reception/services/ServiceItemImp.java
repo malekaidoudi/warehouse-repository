@@ -8,6 +8,7 @@ import com.wh.reception.domain.Item;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 @Stateless
 public class ServiceItemImp implements ServiceItem {
 	
@@ -59,6 +60,20 @@ public class ServiceItemImp implements ServiceItem {
 		logger.info("Item deleted successfully");
 		
 	}
+	
+	@Override
+	public Item findItemById(Long id) {
+		if (id == null) {
+			throw new IllegalArgumentException("Item ID cannot be null");
+		}
+		Item item = em.find(Item.class, id);
+		if (item == null) {
+			logger.info("Item with ID " + id + " not found");
+			return null;
+		}
+		logger.info("Item found: " + item);
+		return item;
+	}
 
 	@Override
 	public List<Item> findAllItems() {
@@ -71,22 +86,66 @@ public class ServiceItemImp implements ServiceItem {
 		return items;
 		
 	}
-
-//	@Override
-//	public void addItemToPalette(Long paletteId, Long itemId) {
-//		if (paletteId == null || itemId == null) {
-//			throw new IllegalArgumentException("Palette ID and Item ID cannot be null");
-//		}
-//		Item item = em.find(Item.class, itemId);
-//		if (item == null) {
-//			throw new IllegalArgumentException("Item with ID " + itemId + " not found");
-//		}
-//		// Logic to add item to palette
-//		logger.info("Item added to palette successfully");
-//		
-//	}
-
 	
+	@Override
+	public List<Item> findItemsByPaletteId(Long paletteId) {
+		if (paletteId == null) {
+			throw new IllegalArgumentException("Palette ID cannot be null");
+		}
+		List<Item> items = em.createQuery(
+				"SELECT i FROM Item i JOIN i.itemLinePalettes ilp WHERE ilp.palette.id = :paletteId", Item.class)
+				.setParameter("paletteId", paletteId).getResultList();
+		if (items.isEmpty()) {
+			logger.info("No items found for palette ID " + paletteId);
+		} else {
+			logger.info("Items found for palette ID " + paletteId + ": " + items.size());
+		}
+		return items;
+		
+	}
 	
+	@Override
+	public List<Item> findItemsByParcelId(Long parcelId) {
+		if (parcelId == null) {
+			throw new IllegalArgumentException("Parcel ID cannot be null");
+		}
+		List<Item> items = em.createQuery(
+				"SELECT i FROM Item i JOIN i.itemLineParcels ilp WHERE ilp.parcel.id = :parcelId", Item.class)
+				.setParameter("parcelId", parcelId).getResultList();
+		if (items.isEmpty()) {
+			logger.info("No items found for parcel ID " + parcelId);
+		} else {
+			logger.info("Items found for parcel ID " + parcelId + ": " + items.size());
+		}
+		return items;	
+	}
+	
+	@Override
+	public List<Item> findItemsByReceptionId(Long receptionId) {
+        if (receptionId == null) {
+            throw new IllegalArgumentException("Reception ID cannot be null");
+        }
 
+        TypedQuery<Item> query = em.createQuery(
+            "SELECT DISTINCT i " +
+            "FROM Item i " +
+            "WHERE EXISTS (" +
+            "    SELECT 1 FROM Reception r " +
+            "    JOIN r.parcels p " +
+            "    JOIN p.itemLineParcels ilp " +
+            "    WHERE ilp.item = i AND r.id = :receptionId" +
+            ") OR EXISTS (" +
+            "    SELECT 1 FROM Reception r " +
+            "    JOIN r.palettes pal " +
+            "    JOIN pal.itemLinePalettes ilpal " +
+            "    WHERE ilpal.item = i AND r.id = :receptionId" +
+            ")",
+            Item.class
+        );
+        query.setParameter("receptionId", receptionId);
+        return query.getResultList();
+    }
 }
+	
+
+
