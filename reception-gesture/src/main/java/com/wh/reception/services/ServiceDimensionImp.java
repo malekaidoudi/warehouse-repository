@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.wh.reception.domain.Dimension;
+import com.wh.reception.exception.NotFoundException;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
@@ -39,7 +40,7 @@ public class ServiceDimensionImp implements ServiceDimension {
 		dimension.validate();
 		Dimension existing = em.find(Dimension.class, dimension.getId());
 		if (existing == null) {
-			throw new IllegalArgumentException("Dimension with ID " + dimension.getId() + " not found");
+			throw new NotFoundException("Dimension with ID " + dimension.getId() + " not found");
 		}
 		em.merge(dimension);
 
@@ -52,7 +53,7 @@ public class ServiceDimensionImp implements ServiceDimension {
 		}
 		Dimension dimension = em.find(Dimension.class, id);
 		if (dimension == null) {
-			throw new IllegalArgumentException("Dimension with ID " + id + " not found");
+			throw new NotFoundException("Dimension with ID " + id + " not found");
 		}
 		em.remove(dimension);
 		logger.info("Successfully deleted dimension with id: " + id);
@@ -80,7 +81,7 @@ public class ServiceDimensionImp implements ServiceDimension {
 		Dimension dimension = em.find(Dimension.class, id);
 		if (dimension == null) {
 			logger.warning("Dimension with ID " + id + " not found");
-			return null;
+			throw new NotFoundException("Dimension with ID " + id + " not found");
 		}
 		logger.info("Found dimension with id: " + id);
 		return dimension;

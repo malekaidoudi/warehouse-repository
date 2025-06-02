@@ -2,7 +2,6 @@ package com.wh.reception.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.sql.SQLException;
@@ -18,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
 import com.wh.reception.domain.Category;
+import com.wh.reception.exception.NotFoundException;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -80,65 +80,6 @@ class ServiceCategoriesTest {
 	@DisplayName("Ajouter une catégorie")
 	void testAddCategory() {
 		Category category = new Category();
-		category.setLabel(null);
-		category.setDescription("Test description");
-
-		try {
-			service.addCategory(category);
-			fail("IllegalArgumentException expected");
-		} catch (IllegalArgumentException e) {
-			assertEquals("The category label cannot be empty.", e.getMessage());
-		}
-
-		//pauseServer();
-
-		category.setLabel("ab");
-		category.setDescription("Test description");
-
-		try {
-			service.addCategory(category);
-			fail("IllegalArgumentException expected");
-		} catch (IllegalArgumentException e) {
-			assertEquals("The category label must be between 3 and 50 characters.", e.getMessage());
-		}
-
-		//pauseServer();
-
-		category.setLabel("a".repeat(51));
-		category.setDescription("Test description");
-
-		try {
-			service.addCategory(category);
-			fail("IllegalArgumentException expected");
-		} catch (IllegalArgumentException e) {
-			assertEquals("The category label must be between 3 and 50 characters.", e.getMessage());
-		}
-
-		//pauseServer();
-
-		category.setLabel("TestCategory");
-		category.setDescription("ab");
-
-		try {
-			service.addCategory(category);
-			fail("IllegalArgumentException expected");
-		} catch (IllegalArgumentException e) {
-			assertEquals("The category description must be between 3 and 50 characters.", e.getMessage());
-		}
-
-		//pauseServer();
-
-		category.setLabel("TestCategory");
-		category.setDescription("a".repeat(51));
-
-		try {
-			service.addCategory(category);
-			fail("IllegalArgumentException expected");
-		} catch (IllegalArgumentException e) {
-			assertEquals("The category description must be between 3 and 50 characters.", e.getMessage());
-		}
-
-		//pauseServer();
 
 		category.setLabel("TestCategory");
 		category.setDescription("Test description");
@@ -148,7 +89,7 @@ class ServiceCategoriesTest {
 		em.getTransaction().commit();
 
 		assertNotNull(category.getId(), "L'ID de la categorie devrait être généré");
-
+		//pauseServer();
 	}
 
 	@Test
@@ -179,8 +120,8 @@ class ServiceCategoriesTest {
 		
 		try {
 			service.updateCategory(category);
-			fail("IllegalArgumentException expected");
-		} catch (IllegalArgumentException e) {
+			fail("NotFoundException expected");
+		} catch (NotFoundException e) {
 			assertEquals("Category with ID " + category.getId() + " not found", e.getMessage());
 		}
 	}
@@ -195,25 +136,35 @@ class ServiceCategoriesTest {
 		em.getTransaction().begin();
 		service.addCategory(category);
 		em.getTransaction().commit();
+		
+		assertNotNull(category.getId(), "L'ID de la categorie devrait être généré");
 //pauseServer();
 		em.getTransaction().begin();
 		service.deleteCategory(category.getId());
 		em.getTransaction().commit();
 		
-		assertNull(service.findAllCategories(), "La catégorie devrait être supprimée");
+		List<Category> categories = service.findAllCategories();
+		assertNotNull(categories, "La liste des catégories ne devrait pas être nulle");
+		assertEquals(0, categories.size(), "La liste des catégories devrait être vide");
 		
 		
 		try {
 			service.deleteCategory(category.getId());
-			fail("IllegalArgumentException expected");
-		} catch (IllegalArgumentException e) {
+			fail("NotFoundException expected");
+		} catch (NotFoundException e) {
 			assertEquals("Category with ID " + category.getId() + " not found", e.getMessage());
 		}
 	}
 
 	@Test
 	@DisplayName("Récupérer toutes les catégories")
-	void testFindAllCategories_success() {
+	void testFindAllCategories() {
+		// Vérifie que la liste des catégories est vide au début
+		List<Category> emptyCategories = service.findAllCategories();
+		assertNotNull(emptyCategories, "La liste des catégories ne devrait pas être nulle");
+		assertEquals(0, emptyCategories.size(), "La liste des catégories devrait être vide");
+	
+		
 		Category category1 = new Category();
 		category1.setLabel("TestCategory1");
 		category1.setDescription("Test description 1");
@@ -231,11 +182,12 @@ class ServiceCategoriesTest {
 
 		assertNotNull(categories, "La liste des catégories ne devrait pas être nulle");
 		assertEquals(2, categories.size(), "Il devrait y avoir deux catégories");
+		
 	}
 
 	@Test
 	@DisplayName("Récupérer une catégorie par ID")
-	void testFindCategoryById_success() {
+	void testFindCategoryById() {
 		Category category = new Category();
 		category.setLabel("TestCategory");
 		category.setDescription("Test description");
@@ -251,8 +203,11 @@ class ServiceCategoriesTest {
 		assertEquals(category.getLabel(), foundCategory.getLabel(), "Le label de la catégorie trouvée devrait correspondre");
 		assertEquals(category.getDescription(), foundCategory.getDescription(),
 				"La description de la catégorie trouvée devrait correspondre");
-		
-		assertNull(service.findCategoryById(category.getId()+1L), "La recherche d'une catégorie avec ID null devrait retourner null");
-		
+		try {
+			service.findCategoryById(category.getId()+1L);
+			fail("NotFoundException expected");
+		} catch (NotFoundException e) {
+			assertEquals("Category with ID " + (category.getId()+1L) + " not found", e.getMessage());
+		}
 	}
 }

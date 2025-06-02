@@ -2,7 +2,7 @@
 <jboss-deployment-structure>
     <deployment>
         <dependencies>
-        	<module name="deployment.reception-gesture.jar" />	
+        	<module name="deployment.reception-gesture.jar" export="true" />	
             <module name="org.jboss.resteasy.resteasy-jaxrs" />
             <module name="org.jboss.resteasy.resteasy-jackson2-provider" />
         </dependencies>

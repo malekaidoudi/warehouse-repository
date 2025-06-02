@@ -50,7 +50,6 @@ public class Category implements Serializable {
     public void setLabel(String label) {
         this.label = label;
     }
-
     @Column(name = "description")
     public String getDescription() {
         return description;
@@ -60,21 +59,8 @@ public class Category implements Serializable {
         this.description = description;
     }
 
-    // Validation des données
-    public void validate() {
-        if (label == null || label.trim().isEmpty()) {
-            throw new IllegalArgumentException("The category label cannot be empty.");
-        }
-        if (label.length() < 3 || label.length() > 50) {
-            throw new IllegalArgumentException("The category label must be between 3 and 50 characters.");
-        }
-        if (description.length() < 3 || description.length() > 50) {
-            throw new IllegalArgumentException("The category description must be between 3 and 50 characters.");
-        }
-    }
-
     @Override
     public String toString() {
-        return "Category [id=" + id + ", label=" + label + "]";
+        return "Category [id=" + id + ", label=" + label + ", description=" + description + "]";
     }
 }
