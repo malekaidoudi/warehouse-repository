@@ -25,7 +25,7 @@ public interface ServiceParcel {
 		
 		Parcel findParcelById(Long id);
 		
-		List<Parcel> findAllParcel(Long receptionId);
+		List<Parcel> findAllParcel();
 		
 		List<Parcel> findParcelsByReceptionId(Long receptionId);
 		

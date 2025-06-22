@@ -91,24 +91,16 @@ public class ServiceParcelImp implements ServiceParcel {
 	}
 
 	@Override
-	public List<Parcel> findAllParcel(Long receptionId) {
-		if (receptionId == null) {
-			throw new IllegalArgumentException("Reception ID cannot be null");
-		}
-		Reception reception = em.find(Reception.class, receptionId);
-		if (reception == null) {
-			throw new IllegalArgumentException("Reception with ID " + receptionId + " not found");
-		}
-		List<Parcel> parcels = reception.getParcels();
-
+	public List<Parcel> findAllParcel() {
+		TypedQuery<Parcel> query = em.createQuery("SELECT p FROM Parcel p", Parcel.class);
+		List<Parcel> parcels = query.getResultList();
 		if (parcels.isEmpty()) {
-			logger.warning("No parcels found for reception with ID " + receptionId);
+			logger.info("No parcels found in the database.");
 		} else {
-			logger.info("Found " + parcels.size() + " parcels for reception with ID " + receptionId);
+			logger.info("Found " + parcels.size() + " parcels in the database.");
 		}
 		return parcels;
-	}
-	
+		}	
 	@Override
 	public List<Parcel> findParcelsByReceptionId(Long receptionId) {
 		if (receptionId == null) {

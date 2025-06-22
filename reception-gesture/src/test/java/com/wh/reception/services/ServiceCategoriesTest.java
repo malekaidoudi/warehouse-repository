@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -33,18 +34,18 @@ class ServiceCategoriesTest {
 
 	@BeforeAll
 	void startH2Console() throws SQLException {
-		if (Boolean.getBoolean("h2.console.enabled")) {
+//		if (Boolean.getBoolean("h2.console.enabled")) {
 			h2WebServer = Server.createWebServer("-web", "-webAllowOthers", "-webPort", "8082").start();
 			System.out.println("Console H2 démarrée à : " + h2WebServer.getURL());
-		}
+//		}
 	}
 
 	@AfterAll
 	void stopH2Console() {
-		if (h2WebServer != null) {
+//		if (h2WebServer != null) {
 			h2WebServer.stop();
 			System.out.println("Console H2 arrêtée.");
-		}
+		//}
 	}
 
 	@BeforeEach
@@ -65,16 +66,16 @@ class ServiceCategoriesTest {
 		}
 	}
 
-//	private void pauseServer() {
-//		// Pause le serveur H2 pour permettre à l'utilisateur de voir les données
-//		System.out.println(
-//				"Test en pause. Consultez la console H2 à http://localhost:8082. Appuyez sur Entrée pour continuer...");
-//		try {
-//			System.in.read();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
+	private void pauseServer() {
+		// Pause le serveur H2 pour permettre à l'utilisateur de voir les données
+		System.out.println(
+				"Test en pause. Consultez la console H2 à http://localhost:8082. Appuyez sur Entrée pour continuer...");
+		try {
+			System.in.read();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Test
 	@DisplayName("Ajouter une catégorie")
@@ -88,8 +89,8 @@ class ServiceCategoriesTest {
 		service.addCategory(category);
 		em.getTransaction().commit();
 
+		pauseServer();
 		assertNotNull(category.getId(), "L'ID de la categorie devrait être généré");
-		//pauseServer();
 	}
 
 	@Test
@@ -107,22 +108,22 @@ class ServiceCategoriesTest {
 		category.setDescription("UpdatedDescriptionCategory");
 		
 		em.getTransaction().begin();
-		service.updateCategory(category);
+		service.updateCategory(category.getId(),category);
 		em.getTransaction().commit();
 
 		assertEquals("UpdatedLabelCategory", category.getLabel(), "Le label de la catégorie devrait être mis à jour");
 		assertEquals("UpdatedDescriptionCategory", category.getDescription(),
 				"La description de la catégorie devrait être mis à jour");
 
-		////pauseServer();
+		pauseServer();
 		
 		category.setId(category.getId()+1L);
 		
 		try {
-			service.updateCategory(category);
+			service.updateCategory(category.getId(), category);
 			fail("NotFoundException expected");
 		} catch (NotFoundException e) {
-			assertEquals("Category with ID " + category.getId() + " not found", e.getMessage());
+			assertEquals("Category with ID " + category.getId() + " not found for update.", e.getMessage());
 		}
 	}
 

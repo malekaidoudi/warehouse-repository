@@ -36,6 +36,14 @@ public class ApiError implements Serializable {
         this.message = message;
     }
 
+	public String getDetails() {
+		return details;
+	}
+
+	public void setDetails(String details) {
+		this.details = details;
+	}
+
     @Override
     public String toString() {
         return "ApiError{" +
@@ -44,11 +52,4 @@ public class ApiError implements Serializable {
                '}';
     }
 
-	public String getDetails() {
-		return details;
-	}
-
-	public void setDetails(String details) {
-		this.details = details;
-	}
 }

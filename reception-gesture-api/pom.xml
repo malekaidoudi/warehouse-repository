@@ -41,6 +41,18 @@
 			<version>3.0.0</version>
 			<scope>provided</scope>
 		</dependency>
+		<!-- Vérifiez la dernière version -->
+<!--		<dependency>-->
+<!--    <groupId>jakarta.xml.bind</groupId>-->
+<!--    <artifactId>jakarta.xml.bind-api</artifactId>-->
+<!--    <version>3.0.1</version> -->
+<!--</dependency>-->
+<!--<dependency>-->
+<!--    <groupId>org.jboss.resteasy</groupId>-->
+<!--    <artifactId>resteasy-jaxb-provider</artifactId>-->
+<!--    <version>6.2.1.Final</version> -->
+<!--</dependency>-->
+    <!-- Vérifiez la dernière version -->
 		<dependency>
 			<groupId>org.eclipse</groupId>
 			<artifactId>yasson</artifactId>

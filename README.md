@@ -30,7 +30,7 @@ cd warehouse-repository
 ```
 docker run --name warehouse-db -e POSTGRES_USER=user-name -e POSTGRES_PASSWORD=secret -e POSTGRES_DB=warehouse -p 5432:5432 -d postgres:17
 ```
-1️⃣ 2️⃣ 3️⃣ 4️⃣ 5️⃣ 6️⃣ 7️⃣ 8️⃣ 9️⃣ 0️⃣
+️⃣
 
 
 ### 3️⃣ Déployer sur WildFly

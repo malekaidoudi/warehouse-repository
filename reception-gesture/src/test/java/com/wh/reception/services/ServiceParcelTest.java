@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Date;
@@ -72,16 +71,16 @@ class ServiceParcelTest {
 		}
 	}
 
-	private void pauseServer() {
-		// Pause le serveur H2 pour permettre à l'utilisateur de consulter la base de données
-		System.out.println(
-				"Test en pause. Consultez la console H2 à http://localhost:8082. Appuyez sur Entrée pour continuer...");
-		try {
-			System.in.read();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+//	private void pauseServer() {
+//		// Pause le serveur H2 pour permettre à l'utilisateur de consulter la base de données
+//		System.out.println(
+//				"Test en pause. Consultez la console H2 à http://localhost:8082. Appuyez sur Entrée pour continuer...");
+//		try {
+//			System.in.read();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 	
 	private Reception createTestReception() {
 		Reception reception = new Reception("TestInitiator", "TestShiper", "TestConsignee",
@@ -205,7 +204,7 @@ class ServiceParcelTest {
 
 	@Test
 	@DisplayName("Récupérer toutes les colis d'une réception")
-	void testFindAllParcels_Success() {
+	void testFindAllParcels() {
 		Reception reception = createTestReception();
 		Parcel parcel1 = new Parcel();
 		parcel1.setReception(reception);
@@ -215,29 +214,22 @@ class ServiceParcelTest {
 		parcel1.setDeliveryDate(LocalDate.now().plusDays(2));
 		parcel1.setCreatedAt(new Date());
 		parcel1.setUpdatedAt(new Date());
+		
+		Parcel parcel2 = new Parcel();
+		parcel2.setReception(reception);
+		parcel2.setWidth(200.0);
+		parcel2.setLength(300.0);
+		parcel2.setWeight(20.0);
+		parcel2.setDeliveryDate(LocalDate.now().plusDays(3));
+		parcel2.setCreatedAt(new Date());
+		parcel2.setUpdatedAt(new Date());
+		
 
 		em.getTransaction().begin();
 		service.addParcel(parcel1);
+		service.addParcel(parcel2);
 		em.getTransaction().commit();
 
-		assertEquals(2, service.findAllParcel(reception.getId()).size(), "La réception devrait contenir deux colis");
-	}
-	
-	@Test
-	@DisplayName("Échouer la récupération de tous les colis avec un ID de réception nul")
-	void testFindAllParcels_NullId() {
-		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-			service.findAllParcel(null);
-		});
-		assertEquals("Reception ID cannot be null", exception.getMessage());
-	}
-	
-	@Test
-	@DisplayName("Échouer la récupération de tous les colis pour une réception inexistante")
-	void testFindAllParcels_NotFound() {
-		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-			service.findAllParcel(999L);
-		});
-		assertEquals("Reception with ID 999 not found", exception.getMessage());
+		assertEquals(3, service.findAllParcel().size(), "La réception devrait contenir deux colis");
 	}
 }

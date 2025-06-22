@@ -56,6 +56,17 @@
 			<version>6.1.5.Final</version>
 			<scope>test</scope>
 		</dependency>
+			<!-- SLF4J pour la journalisation -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.9</version>
+        </dependency>
 	</dependencies>
 	<build>
 		<plugins>

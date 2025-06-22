@@ -20,7 +20,7 @@ public interface ServiceCategories {
 	
 		void addCategory(Category category);
 		
-		void updateCategory(Category category);
+		Category updateCategory(Long id,Category category);
 		
 		void deleteCategory(Long id);
 		
