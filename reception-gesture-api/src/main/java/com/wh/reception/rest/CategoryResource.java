@@ -48,12 +48,12 @@ public class CategoryResource {
 	 * @param category the category to be created
 	 * @return Response indicating the result of the operation
 	 */
-	
+
 	@POST
 	public Response createCategory(Category category) {
-	    serviceCategories.addCategory(category);
-	    LOGGER.info("Catégorie créée avec succès: {}", category.getLabel());
-	    return Response.status(Response.Status.CREATED).entity(category).build();
+		serviceCategories.addCategory(category);
+		LOGGER.info("Category created successfully: {}", category.getLabel());
+		return Response.status(Response.Status.CREATED).entity(category).build();
 	}
 
 	/**
@@ -64,6 +64,8 @@ public class CategoryResource {
 
 	@GET
 	public Response getAllCategories() {
+
+		LOGGER.info("Fetching all categories");
 		List<Category> categories = serviceCategories.findAllCategories();
 		if (categories.isEmpty()) {
 			return Response.status(Response.Status.NO_CONTENT).build();
@@ -82,9 +84,9 @@ public class CategoryResource {
 	@Path("/{id}")
 	public Response updateCategory(@PathParam("id") Long id, Category category) {
 		category.setId(id);
-        Category categoryUpdated=serviceCategories.updateCategory(id,category);
-        LOGGER.info("Catégorie mise à jour avec succès pour l'ID: {}", id);
-        return Response.ok(categoryUpdated).build();
+		Category categoryUpdated = serviceCategories.updateCategory(id, category);
+		LOGGER.info("Category updated successfully: {}", category.getLabel());
+		return Response.ok(categoryUpdated).build();
 	}
 
 	/**
@@ -98,6 +100,7 @@ public class CategoryResource {
 	@Path("/{id}")
 	public Response deleteCategory(@PathParam("id") Long id) {
 		serviceCategories.deleteCategory(id);
+		LOGGER.info("Category with ID {} deleted successfully", id);
 		return Response.noContent().build();
 	}
 
@@ -111,7 +114,8 @@ public class CategoryResource {
 	@GET
 	@Path("/{id}")
 	public Response getCategoryById(@PathParam("id") Long id) {
+		LOGGER.info("Fetching category with ID: {}", id);
 		Category category = serviceCategories.findCategoryById(id);
-        return Response.ok(category).build();
+		return Response.ok(category).build();
 	}
 }

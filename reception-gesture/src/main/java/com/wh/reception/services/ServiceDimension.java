@@ -15,9 +15,9 @@ public interface ServiceDimension {
 		 * @param id the ID of the dimension
 		 */
 
-		void addDimension(Dimension dimension);
+		Dimension addDimension(Dimension dimension);
 		
-		void updateDimension(Dimension dimension);
+		Dimension updateDimension(Long id,Dimension dimension);
 		
 		void deleteDimension(Long id);
 		

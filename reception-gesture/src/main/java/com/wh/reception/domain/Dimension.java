@@ -10,7 +10,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "dimensions")
@@ -20,14 +19,14 @@ public class Dimension implements Serializable {
 
     private Long id;
     private String label;
-    private int width;
-    private int length;
+    private Double width;
+    private Double length;
     
 
     public Dimension() {
     }
 
-    public Dimension(String label, int width, int length) {
+    public Dimension(String label, Double width, Double length) {
         this.label = label;
         this.width = width;
         this.length = length;
@@ -45,7 +44,6 @@ public class Dimension implements Serializable {
     }
 
     @NotNull(message = "The dimension name cannot be null")
-    @Size(min = 3, max = 50, message = "The name must be between 3 and 50 characters")
     @Column(name = "label", nullable = false, length = 50)
     public String getLabel() {
         return label;
@@ -57,41 +55,41 @@ public class Dimension implements Serializable {
 
     @Min(value = 1, message = "The width must be positive")
     @Column(name = "width", nullable = false)
-    public int getWidth() {
+    public Double getWidth() {
         return width;
     }
 
-    public void setWidth(int width) {
+    public void setWidth(Double width) {
         this.width = width;
     }
 
     @Min(value = 1, message = "The length must be positive")
     @Column(name = "length", nullable = false)
-    public int getLength() {
+    public Double getLength() {
         return length;
     }
 
-    public void setLength(int length) {
+    public void setLength(Double length) {
         this.length = length;
     }
 
     
 
-    // Validation des données
-    public void validate() {
-        if (label == null || label.trim().isEmpty()) {
-            throw new IllegalArgumentException("The dimension label cannot be null or empty.");
-        }
-        if (label.length() < 3 || label.length() > 50) {
-            throw new IllegalArgumentException("The label must be between 3 and 50 characters.");
-        }
-        if (width < 1) {
-            throw new IllegalArgumentException("The width must be positive and be greater than 1.");
-        }
-        if (length <= width) {
-            throw new IllegalArgumentException("The length must be greater than the width.");
-        }
-    }
+//    // Validation des données
+//    public void validate() {
+//        if (label == null || label.trim().isEmpty()) {
+//            throw new IllegalArgumentException("The dimension label cannot be null or empty.");
+//        }
+//        if (label.length() < 3 || label.length() > 50) {
+//            throw new IllegalArgumentException("The label must be between 3 and 50 characters.");
+//        }
+//        if (width < 1) {
+//            throw new IllegalArgumentException("The width must be positive and be greater than 1.");
+//        }
+//        if (length <= width) {
+//            throw new IllegalArgumentException("The length must be greater than the width.");
+//        }
+//    }
 
     @Override
     public String toString() {

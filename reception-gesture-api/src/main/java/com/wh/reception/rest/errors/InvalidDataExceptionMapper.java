@@ -19,13 +19,18 @@ public class InvalidDataExceptionMapper implements ExceptionMapper<InvalidDataEx
     public Response toResponse(InvalidDataException exception) {
         String errorCode;
         // Déduction du code d'erreur basée sur le message ou des conventions
-        if (exception.getMessage().contains("label must be between") && exception.getMessage().contains("empty")) {
-            errorCode = ErrorCodes.CATEGORY_INVALID_DATA;
+        if (exception.getMessage().contains("category") && exception.getMessage().contains("must be between")) {
+            errorCode = ErrorCodes.CATEGORY_INVALID_LABEL;
         } else if (exception.getMessage().contains("category") && exception.getMessage().contains("already exists")) {
              errorCode = ErrorCodes.CATEGORY_ALREADY_EXISTS;
-        } else if (exception.getMessage().contains("ID") && exception.getMessage().contains("invalide")) {
-             errorCode = ErrorCodes.BAD_REQUEST_GENERIC; 
-        }
+        }else if (exception.getMessage().contains("dimension") && exception.getMessage().contains("already exists")) {
+			errorCode = ErrorCodes.DIMENSION_ALREADY_EXISTS;
+		} else if (exception.getMessage().contains("dimension") && exception.getMessage().contains("must be between")) {
+			errorCode = ErrorCodes.DIMENSION_INVALID_LABEL;
+		}else if (exception.getMessage().contains("dimension") && exception.getMessage().contains("must be positive")) {
+			errorCode = ErrorCodes.DIMENSION_INVALID_DIMENSION;
+		}
+		
         // ... Ajoutez d'autres conditions ...
         else {
             errorCode = ErrorCodes.BAD_REQUEST_GENERIC;

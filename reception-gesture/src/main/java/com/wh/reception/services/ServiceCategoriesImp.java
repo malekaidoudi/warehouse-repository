@@ -30,8 +30,6 @@ public class ServiceCategoriesImp implements ServiceCategories {
 	public void addCategory(Category category) {
 		if (category == null) {
 			LOGGER.error("Category cannot be null during add operation.");
-			// Utilisez un message brut pour le moment, le mapper s'occupera du code
-			// d'erreur
 			throw new InvalidDataException("Category cannot be null.");
 		}
 		if (category.getLabel() == null || category.getLabel().trim().isEmpty()) {

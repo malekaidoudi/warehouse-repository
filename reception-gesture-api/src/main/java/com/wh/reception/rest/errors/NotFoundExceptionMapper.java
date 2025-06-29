@@ -19,16 +19,16 @@ public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundExceptio
 		if (exception.getMessage().contains("not found")) {
 			if (exception.getMessage().contains("Category")) {
 				errorCode = ErrorCodes.CATEGORY_NOT_FOUND;
-			} else if (exception.getMessage().contains("Parcel")) {
-				errorCode = ErrorCodes.PARCEL_NOT_FOUND;
 			} else if (exception.getMessage().contains("Dimension")) {
 				errorCode = ErrorCodes.DIMENSION_NOT_FOUND;
+			} else if (exception.getMessage().contains("Parcel")) {
+				//errorCode = ErrorCodes.PARCEL_NOT_FOUND;
 			} else if (exception.getMessage().contains("Reception")) {
-				errorCode = ErrorCodes.RECEPTION_NOT_FOUND;
+				//errorCode = ErrorCodes.RECEPTION_NOT_FOUND;
 			} else if (exception.getMessage().contains("Item")) {
-				errorCode = ErrorCodes.ITEM_NOT_FOUND;
+				//errorCode = ErrorCodes.ITEM_NOT_FOUND;
 			} else if (exception.getMessage().contains("Palette")) {
-				errorCode = ErrorCodes.PALETTE_NOT_FOUND;
+				//errorCode = ErrorCodes.PALETTE_NOT_FOUND;
 			} 
 		}
 		// Créer un objet ApiError avec le code d'erreur et le message
