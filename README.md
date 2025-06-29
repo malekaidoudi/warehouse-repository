@@ -2,106 +2,146 @@
 
 ## 📖 Description
 
-Ce projet est une API backend permettant de gérer un entrepôt, développée avec **JDK 17**, **Jakarta EE 10** et déployée sur **WildFly 27**.  
-La base de données **PostgreSQL 17** est exécutée dans un **conteneur Docker** pour une gestion simplifiée.
+Ce projet est une API backend pour gérer un entrepôt, développée avec **JDK 17**, **Jakarta EE 10**, et déployée sur **WildFly 27**. La base de données **PostgreSQL 17** est exécutée dans un conteneur **Docker** avec un script d'initialisation pour configurer les tables et données initiales.
 
 ## 🏗 Technologies utilisées
 
-- **Langage** : Java (JDK 17)
-- **Framework** : Jakarta EE 10
-- **Serveur d'application** : WildFly 27
-- **Base de données** : PostgreSQL 17 (Docker)
-- **Gestion des dépendances** : Maven
-- **API REST** : JAX-RS
+-   **Langage** : Java (JDK 17)
+-   **Framework** : Jakarta EE 10
+-   **Serveur d'application** : WildFly 27
+-   **Base de données** : PostgreSQL 17 (Docker)
+-   **Gestion des dépendances** : Maven
+-   **API REST** : JAX-RS
 
-## 🚀 Installation et Déploiement
+## 🚀 Installation et déploiement
 
 ### 0️⃣ Prérequis
 
 Avant de commencer, assurez-vous d'avoir installé :
 
-- **JDK 17**
-- **Docker** (pour PostgreSQL)
-- **WildFly 27**
+-   **JDK 17** :
+    -   **macOS** : `brew install openjdk@17`
+    -   **Ubuntu** : `sudo apt install openjdk-17-jdk`
+-   **Docker** :
+    -   **macOS** : Installez [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+    -   **Ubuntu** : `sudo apt install docker.io`. Ajoutez votre utilisateur au groupe Docker : `sudo usermod -aG docker $USER` et reconnectez-vous.
+-   **Maven** :
+    -   **macOS** : `brew install maven`
+    -   **Ubuntu** : `sudo apt install maven`
+-   **WildFly 27** : Téléchargez depuis [WildFly](https://github.com/wildfly/wildfly/releases/download/27.0.1.Final/wildfly-27.0.1.Final.zip.sha1).
 
+**Vérification** :
+
+```bash
+java -version  # Doit afficher JDK 17
+docker --version
+mvn -version
+```
 ### 1️⃣ Cloner le projet
 
-```
-bash
+```bash
 git clone https://github.com/malekaidoudi/warehouse-repository.git
 cd warehouse-repository
 ```
 
-### 2️⃣ Lancer PostgreSQL avec Docker:
+### 2️⃣ Lancer PostgreSQL avec Docker
 
-```
-docker run --name warehouse-db -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=root -e POSTGRES_DB=warehouse -p 5432:5432 -d postgres:17
-```
-
-️⃣
-
-### 3️⃣ Déployer sur WildFly
-
-<details>
-<summary><strong>Telecharger WildFly27.0.1</strong></summary>
-
-```
-bash
-wget https://github.com/wildfly/wildfly/releases/download/27.0.1.Final/wildfly-27.0.1.Final.zip
-```
-
-</details>
-<details>
-<summary><strong>Extraire l’archive</strong></summary>
+**Nettoyer les conteneurs existants (si nécessaire)** :
 
 ```bash
+docker ps -a  # Liste tous les conteneurs, y compris ceux arrêtés
+docker stop warehouse-db  # Arrête le conteneur s'il est en cours d'exécution
+docker rm warehouse-db  # Supprime le conteneur
+
+```
+
+Construisez l'image Docker à partir du `Dockerfile` :
+
+```bash
+docker build -t warehouse-db .
+
+```
+> [!TIP]
+> Il faut s'assurer que vous étes au dossier /warehouse-repository/reception-gesture
+
+Exécutez le conteneur :
+
+```bash
+docker run --name warehouse-db -p 5432:5432 -d warehouse-db
+```
+
+**Vérification** :
+
+1.  Vérifiez que le conteneur est en cours d'exécution :
+```bash
+docker ps  # Le conteneur "warehouse-db" doit apparaître
+```
+
+2.  Vérifiez que la base de données est accessible :
+
+```bash
+docker exec -it warehouse-db psql -U postgres -d warehouse -c "SELECT 1"
+
+```
+
+3.  Vérifiez que le script `init.sql` a créé les tables :
+
+```bash
+docker exec -it warehouse-db psql -U postgres -d warehouse -c "\dt"
+```
+
+### 3️⃣ Configurer WildFly
+
+#### a) Télécharger et extraire WildFly
+
+Téléchargez WildFly 27.0.1 :
+
+```bash
+curl -LO https://github.com/wildfly/wildfly/releases/download/27.0.1.Final/wildfly-27.0.1.Final.zip
 unzip wildfly-27.0.1.Final.zip
+sudo mv wildfly-27.0.1.Final /opt/wildfly  # Nécessite sudo pour /opt
+
 ```
 
-</details>
-<details>
-  <summary><strong>Déplacez WildFly dans un répertoire comme /opt/wildfly</strong></summary>
-  
+**Modifier les permissions (Ubuntu uniquement)** :
+
+```bash
+sudo chown -R $USER:$USER /opt/wildfly
+sudo chmod -R u+rwX /opt/wildfly
+
 ```
-bash
-sudo mv wildfly-27.0.1.Final /opt/wildfly
+
+**Vérification** :
+
+```bash
+ls -ld /opt/wildfly
 ```
-</details>
-<details>
-  <summary><strong>Télécharger le driver JDBC PostgreSQL (par exemple, version 42.7.5)</strong></summary>
-  
+
+#### b) Configurer le driver JDBC PostgreSQL
+
+Téléchargez le driver JDBC (version 42.7.5) :
+
+```bash
+# macOS/Linux
+curl -Lo /tmp/postgresql-42.7.5.jar https://jdbc.postgresql.org/download/postgresql-42.7.5.jar
 ```
-bash
-wget -P /tmp https://jdbc.postgresql.org/download/postgresql-42.7.5.jar
-```
-</details>
-<details>
-  <summary><strong>Créez un dossier pour le module PostgreSQL</strong></summary>
-  
-```
-bash
+
+Créez un dossier pour le module PostgreSQL :
+
+```bash
 mkdir -p /opt/wildfly/modules/org/postgresql/main
-```
-</details>
-<details>
-  <summary><strong>Deplacer le driver dans le dossier qu'on a crée</strong></summary>
-
-```
-bash
 mv /tmp/postgresql-42.7.5.jar /opt/wildfly/modules/org/postgresql/main/
 ```
 
-</details>
-<details>
-  <summary><strong>Créez un fichier module.xml dans le dossier qu'on a crée</strong></summary>
-  
-```
-bash
-cat > /opt/wildfly/modules/org/postgresql/main/module.xml <<EOF
+Créez le fichier `module.xml` :
+
+```bash
+cat > /opt/wildfly/modules/org/postgresql/main/module.xml <<
+EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="urn:jboss:module:1.9" name="org.postgresql">
     <resources>
-        <resource-root path="postgresql-42.7.3.jar"/>
+        <resource-root path="postgresql-42.7.5.jar"/>
     </resources>
     <dependencies>
         <module name="javax.api"/>
@@ -110,50 +150,49 @@ cat > /opt/wildfly/modules/org/postgresql/main/module.xml <<EOF
 </module>
 EOF
 ```
-</details>
-<details>
-  <summary><strong>Ajouter la datasource</strong></summary>
 
+#### c) Ajouter la datasource
+
+**Pré-requis** : Assurez-vous que le conteneur PostgreSQL est démarré (voir étape 2) avant de configurer la datasource.
+Démarrez WildFly :
+```bash
+/opt/wildfly/bin/standalone.sh &
 ```
-bash
-/opt/wildfly/bin/jboss-cli.sh --connect <<EOF
+Ajoutez le driver JDBC et la datasource via `jboss-cli` :
+
+```bash
+/opt/wildfly/bin/jboss-cli.sh --connect <<
+EOF
+/subsystem=datasources/jdbc-driver=postgresql:add(driver-name="postgresql", driver-module-name="org.postgresql", driver-class-name="org.postgresql.Driver")
 /subsystem=datasources/data-source=WarehouseDS:add(jndi-name="java:/WarehouseDS", enabled=true, driver-name="postgresql", connection-url="jdbc:postgresql://localhost:5432/warehouse", user-name="postgres", password="root")
 /subsystem=datasources/data-source=WarehouseDS:write-attribute(name=valid-connection-checker-class-name, value="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLValidConnectionChecker")
 /subsystem=datasources/data-source=WarehouseDS:write-attribute(name=background-validation, value=true)
 /subsystem=datasources/data-source=WarehouseDS:write-attribute(name=exception-sorter-class-name, value="org.jboss.jca.adapters.jdbc.extensions.postgres.PostgreSQLExceptionSorter")
-/subsystem=datasources/jdbc-driver=postgresql:add(driver-name="postgresql", driver-module-name="org.postgresql", driver-class-name="org.postgresql.Driver")
 EOF
-```
 
-</details>
+```
 
 ### 4️⃣ Construire le projet
 
+```bash
+mvn -f /warehouse-repository/reception-gesture/pom.xml clean install -DskipTests
+mvn -f /warehouse-repository/reception-gesture-api/pom.xml clean install
 ```
-bash
-mvn clean install
-```
 
-> [!TIP]
-> Rajouter l'option <i>-DskipTests</i> pour faire sauter les tests
+### 5️⃣ Déployer le projet
 
-### 5️⃣ Deployer le project
+Copiez les artefacts vers WildFly :
 
-Déployer l'artefact (war) et l'artefact (jar) sur WildFly :
-
-```
+```bash
 cp reception-gesture-api/target/reception-gesture-api.war /opt/wildfly/standalone/deployments/
 cp reception-gesture/target/reception-gesture.jar /opt/wildfly/standalone/deployments/
 ```
+### 📌 Endpoints API REST
 
-📌 Endpoints API REST
+### 📜 Licence
 
-........
-.......
-......
-
-📜 Licence
 Ce projet est sous licence MIT.
 
-👥 Auteur
+### 👥 Auteur
+
 Développé par Malek Aidoudi.
