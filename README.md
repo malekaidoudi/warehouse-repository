@@ -1,46 +1,55 @@
-# 🚀 Warehouse API Backend  
+# 🚀 Warehouse API Backend
 
-## 📖 Description  
+## 📖 Description
+
 Ce projet est une API backend permettant de gérer un entrepôt, développée avec **JDK 17**, **Jakarta EE 10** et déployée sur **WildFly 27**.  
-La base de données **PostgreSQL 17** est exécutée dans un **conteneur Docker** pour une gestion simplifiée.  
+La base de données **PostgreSQL 17** est exécutée dans un **conteneur Docker** pour une gestion simplifiée.
 
-## 🏗 Technologies utilisées  
-- **Langage** : Java (JDK 17)  
-- **Framework** : Jakarta EE 10  
-- **Serveur d'application** : WildFly 27  
-- **Base de données** : PostgreSQL 17 (Docker)  
-- **Gestion des dépendances** : Maven  
-- **API REST** : JAX-RS  
+## 🏗 Technologies utilisées
 
-## 🚀 Installation et Déploiement  
+- **Langage** : Java (JDK 17)
+- **Framework** : Jakarta EE 10
+- **Serveur d'application** : WildFly 27
+- **Base de données** : PostgreSQL 17 (Docker)
+- **Gestion des dépendances** : Maven
+- **API REST** : JAX-RS
 
-### 0️⃣ Prérequis  
-Avant de commencer, assurez-vous d'avoir installé :  
-- **JDK 17**  
-- **Docker** (pour PostgreSQL)  
-- **WildFly 27**  
+## 🚀 Installation et Déploiement
 
-### 1️⃣ Cloner le projet  
+### 0️⃣ Prérequis
+
+Avant de commencer, assurez-vous d'avoir installé :
+
+- **JDK 17**
+- **Docker** (pour PostgreSQL)
+- **WildFly 27**
+
+### 1️⃣ Cloner le projet
+
 ```
 bash
 git clone https://github.com/malekaidoudi/warehouse-repository.git
 cd warehouse-repository
 ```
-###  2️⃣ Lancer PostgreSQL avec Docker:
+
+### 2️⃣ Lancer PostgreSQL avec Docker:
+
 ```
-docker run --name warehouse-db -e POSTGRES_USER=user-name -e POSTGRES_PASSWORD=secret -e POSTGRES_DB=warehouse -p 5432:5432 -d postgres:17
+docker run --name warehouse-db -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=root -e POSTGRES_DB=warehouse -p 5432:5432 -d postgres:17
 ```
+
 ️⃣
 
-
 ### 3️⃣ Déployer sur WildFly
+
 <details>
 <summary><strong>Telecharger WildFly27.0.1</strong></summary>
 
- ```
+```
 bash
 wget https://github.com/wildfly/wildfly/releases/download/27.0.1.Final/wildfly-27.0.1.Final.zip
 ```
+
 </details>
 <details>
 <summary><strong>Extraire l’archive</strong></summary>
@@ -48,6 +57,7 @@ wget https://github.com/wildfly/wildfly/releases/download/27.0.1.Final/wildfly-2
 ```bash
 unzip wildfly-27.0.1.Final.zip
 ```
+
 </details>
 <details>
   <summary><strong>Déplacez WildFly dans un répertoire comme /opt/wildfly</strong></summary>
@@ -80,6 +90,7 @@ mkdir -p /opt/wildfly/modules/org/postgresql/main
 bash
 mv /tmp/postgresql-42.7.5.jar /opt/wildfly/modules/org/postgresql/main/
 ```
+
 </details>
 <details>
   <summary><strong>Créez un fichier module.xml dans le dossier qu'on a crée</strong></summary>
@@ -113,6 +124,7 @@ bash
 /subsystem=datasources/jdbc-driver=postgresql:add(driver-name="postgresql", driver-module-name="org.postgresql", driver-class-name="org.postgresql.Driver")
 EOF
 ```
+
 </details>
 
 ### 4️⃣ Construire le projet
@@ -121,8 +133,9 @@ EOF
 bash
 mvn clean install
 ```
+
 > [!TIP]
-> Rajouter l'option <i>-DskipTests</i> pour faire sauter les tests 
+> Rajouter l'option <i>-DskipTests</i> pour faire sauter les tests
 
 ### 5️⃣ Deployer le project
 
@@ -132,6 +145,7 @@ Déployer l'artefact (war) et l'artefact (jar) sur WildFly :
 cp reception-gesture-api/target/reception-gesture-api.war /opt/wildfly/standalone/deployments/
 cp reception-gesture/target/reception-gesture.jar /opt/wildfly/standalone/deployments/
 ```
+
 📌 Endpoints API REST
 
 ........
