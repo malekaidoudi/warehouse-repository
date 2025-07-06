@@ -22,7 +22,7 @@ public class NotFoundExceptionMapper implements ExceptionMapper<NotFoundExceptio
 			} else if (exception.getMessage().contains("Dimension")) {
 				errorCode = ErrorCodes.DIMENSION_NOT_FOUND;
 			} else if (exception.getMessage().contains("Parcel")) {
-				//errorCode = ErrorCodes.PARCEL_NOT_FOUND;
+				errorCode = ErrorCodes.PARCEL_NOT_FOUND;
 			} else if (exception.getMessage().contains("Reception")) {
 				//errorCode = ErrorCodes.RECEPTION_NOT_FOUND;
 			} else if (exception.getMessage().contains("Item")) {

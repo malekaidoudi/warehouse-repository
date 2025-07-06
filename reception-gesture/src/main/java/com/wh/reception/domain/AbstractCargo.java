@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
 
+import com.wh.reception.exception.InvalidDataException;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -120,17 +122,17 @@ public abstract class AbstractCargo implements Serializable {
 
     public void validate() {
         LocalDate now = LocalDate.now();
-        if (deliveryDate == null) {
-            throw new IllegalStateException("The delivery date is mandatory.");
+        if ((deliveryDate == null)||expirationDate == null) {
+            throw new InvalidDataException("The delivery and expiration dates are mandatory.");
         }
         if (deliveryDate.isBefore(now)) {
-            throw new IllegalStateException("The delivery date must be on or after the current date.");
+            throw new InvalidDataException("The delivery date must be on or after the current date.");
         }
-        if (createdAt == null) {
-            throw new IllegalStateException("The creation date is mandatory.");
-        }
+        if(expirationDate != null && expirationDate.isBefore(now)) {
+			throw new InvalidDataException("The expiration date must be on or after the current date.");
+		}
         if (expirationDate != null && expirationDate.isBefore(deliveryDate)) {
-            throw new IllegalStateException("The expiration date must be after the delivery date.");
+            throw new InvalidDataException("The expiration date must be after the delivery date.");
         }
     }
 }

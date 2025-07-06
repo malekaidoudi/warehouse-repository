@@ -49,47 +49,44 @@ cd warehouse-repository
 **Nettoyer les conteneurs existants (si nécessaire)** :
 
 ```bash
-docker ps -a  # Liste tous les conteneurs, y compris ceux arrêtés
-docker stop warehouse-db  # Arrête le conteneur s'il est en cours d'exécution
-docker rm warehouse-db  # Supprime le conteneur
-
+docker-compose ps   # Liste tous les conteneurs, y compris ceux arrêtés egalement tu peux utiliser docker ps -a
+docker-compose down  # Arrête et supprimer  le conteneur s'il est en cours d'exécution egalement tu peux utiliser docker stop warehouse_db pour arreter le conteneur et aprés docker rm warehouse_db pour le supprimer
 ```
 
-Construisez l'image Docker à partir du `Dockerfile` :
+Construisez et executez l'image Docker à partir du `docker-compose.yml` :
 
 ```bash
-docker build -t warehouse-db .
+docker-compose up -d
 
 ```
 > [!TIP]
 > Il faut s'assurer que vous étes au dossier /warehouse-repository/reception-gesture
 
-Exécutez le conteneur :
-
-```bash
-docker run --name warehouse-db -p 5432:5432 -d warehouse-db
-```
 
 **Vérification** :
 
 1.  Vérifiez que le conteneur est en cours d'exécution :
 ```bash
-docker ps  # Le conteneur "warehouse-db" doit apparaître
+docker ps  # Le conteneur "warehouse_db" doit apparaître
 ```
 
 2.  Vérifiez que la base de données est accessible :
 
 ```bash
-docker exec -it warehouse-db psql -U postgres -d warehouse -c "SELECT 1"
+docker exec -it warehouse_db psql -U postgres -d warehouse -c "SELECT 1"
 
 ```
 
 3.  Vérifiez que le script `init.sql` a créé les tables :
 
 ```bash
-docker exec -it warehouse-db psql -U postgres -d warehouse -c "\dt"
+docker exec -it warehouse_db psql -U postgres -d warehouse -c "\dt" # Normalement vous trouvez 8 tables
 ```
-
+4. Si vous avez rencontré un problème vous pouvez consulter le log
+   
+```bash
+docker-compose logs db  # db le nom de service
+```
 ### 3️⃣ Configurer WildFly
 
 #### a) Télécharger et extraire WildFly

@@ -142,7 +142,7 @@ class ServiceParcelTest {
 		Parcel parcel = reception.getParcels().get(0);
 		parcel.setWeight(20.0);
 		em.getTransaction().begin();
-		service.updateParcel(parcel);
+		service.updateParcel(parcel.getId(), parcel);
 		em.getTransaction().commit();
 		Parcel updated = em.find(Parcel.class, parcel.getId());
 		assertEquals(20.0, updated.getWeight(), 0.01, "Le poids du colis devrait être mis à jour");

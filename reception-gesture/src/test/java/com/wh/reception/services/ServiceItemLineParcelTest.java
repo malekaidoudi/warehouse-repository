@@ -3,7 +3,6 @@ package com.wh.reception.services;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Date;
@@ -67,16 +66,16 @@ class ServiceItemLineParcelTest {
 		}
 	}
 
-	private void pauseServer() {
-		// Pause le serveur H2 pour permettre à l'utilisateur de voir les données
-		System.out.println(
-				"Test en pause. Consultez la console H2 à http://localhost:8082. Appuyez sur Entrée pour continuer...");
-		try {
-			System.in.read();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+//	private void pauseServer() {
+//		// Pause le serveur H2 pour permettre à l'utilisateur de voir les données
+//		System.out.println(
+//				"Test en pause. Consultez la console H2 à http://localhost:8082. Appuyez sur Entrée pour continuer...");
+//		try {
+//			System.in.read();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	private Reception createTestReception() {
 		Reception reception = new Reception("TestInitiator", "TestShiper", "TestConsignee",

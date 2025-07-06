@@ -19,7 +19,7 @@ public interface ServiceParcel {
 
 		void addParcel(Parcel parcel);
 
-		void updateParcel(Parcel parcel);
+		Parcel updateParcel(Long id,Parcel parcel);
 
 		void deleteParcel(Long id);
 		

@@ -29,7 +29,15 @@ public class InvalidDataExceptionMapper implements ExceptionMapper<InvalidDataEx
 			errorCode = ErrorCodes.DIMENSION_INVALID_LABEL;
 		}else if (exception.getMessage().contains("dimension") && exception.getMessage().contains("must be positive")) {
 			errorCode = ErrorCodes.DIMENSION_INVALID_DIMENSION;
-		}
+		}else if(exception.getMessage().contains("parcel") && exception.getMessage().contains("associated with")) {
+			errorCode = ErrorCodes.PARCEL_MISSING_RECEPTION_ID;
+		}else if (exception.getMessage().contains("dates are mandatory")) {
+			errorCode = ErrorCodes.DATE_DEL_EXP_MUST_BE_LINKED;
+		} else if (exception.getMessage().contains("must be on or after the current date")) {
+			errorCode = ErrorCodes.DATE_DEL_EXP_MUST_BE_VALID;
+		} else if (exception.getMessage().contains("The expiration date must be after the delivery date")) {
+				errorCode = ErrorCodes.DATE_DEL_EXP_MUST_BE_CONST;
+		} 
 		
         // ... Ajoutez d'autres conditions ...
         else {

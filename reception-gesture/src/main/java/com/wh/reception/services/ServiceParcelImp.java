@@ -6,6 +6,8 @@ import java.util.logging.Logger;
 
 import com.wh.reception.domain.Parcel;
 import com.wh.reception.domain.Reception;
+import com.wh.reception.exception.InvalidDataException;
+import com.wh.reception.exception.NotFoundException;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
@@ -29,12 +31,14 @@ public class ServiceParcelImp implements ServiceParcel {
 	@Override
 	public void addParcel(Parcel parcel) {
 		if (parcel.getReception() == null) {
-			throw new IllegalArgumentException("A parcel must be associated with a valid reception.");
+			throw new InvalidDataException("A parcel must be associated with a valid reception.");
 		}
 		Reception reception = em.find(Reception.class, parcel.getReception().getId());
 		if (reception == null) {
-			throw new IllegalArgumentException("The specified reception does not exist.");
+			throw new InvalidDataException("The ID reception associated with the parcel could not be found. " +
+					"Please ensure that the reception exists before adding a parcel.");
 		}
+		
 		parcel.validate();
 		reception.getParcels().add(parcel);
 		em.persist(parcel);
@@ -42,13 +46,13 @@ public class ServiceParcelImp implements ServiceParcel {
 	}
 
 	@Override
-	public void updateParcel(Parcel parcel) {
-		if (parcel == null || parcel.getId() == null) {
+	public Parcel updateParcel(Long id, Parcel parcel) {
+		if (parcel == null || id == null) {
 			throw new IllegalArgumentException("Parcel or its ID cannot be null");
 		}
-		Parcel existing = em.find(Parcel.class, parcel.getId());
-		if (existing == null) {
-			throw new IllegalArgumentException("Parcel with ID " + parcel.getId() + " not found");
+		Parcel existingParcel = em.find(Parcel.class, id);
+		if (existingParcel == null) {
+			throw new NotFoundException("Parcel with ID " + parcel.getId() + " not found");
 		}
 		Reception reception = em.find(Reception.class, parcel.getReception().getId());
 		if (reception == null) {
@@ -56,8 +60,9 @@ public class ServiceParcelImp implements ServiceParcel {
 		}
 		parcel.validate();
 		parcel.setUpdatedAt(new Date());
-		em.merge(parcel);
+		
 		logger.info("Successfully updated parcel with id: " + parcel.getId());
+		return em.merge(parcel);
 	}
 
 	@Override
