@@ -68,7 +68,7 @@ public final class ValidationUtils {
      * @param expirationDate the expiration date
      * @throws IllegalArgumentException if dates are invalid
      */
-    public static void validateCargodates(LocalDate deliveryDate, LocalDate expirationDate) {
+    public static void validateCargoDate(LocalDate deliveryDate, LocalDate expirationDate) {
         LocalDate now = LocalDate.now();
         
         if (deliveryDate == null || expirationDate == null) {
