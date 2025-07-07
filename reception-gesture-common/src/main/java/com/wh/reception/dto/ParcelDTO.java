@@ -3,6 +3,7 @@ package com.wh.reception.dto;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -58,6 +59,10 @@ public class ParcelDTO implements Serializable {
     @JsonProperty("updatedAt")
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private Date updatedAt;
+
+    // Optional: Include related entities for display purposes
+    @JsonProperty("itemLineParcels")
+    private List<ItemLineParcelDTO> itemLineParcels;
 
     public ParcelDTO() {
     }
@@ -161,6 +166,14 @@ public class ParcelDTO implements Serializable {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<ItemLineParcelDTO> getItemLineParcels() {
+        return itemLineParcels;
+    }
+
+    public void setItemLineParcels(List<ItemLineParcelDTO> itemLineParcels) {
+        this.itemLineParcels = itemLineParcels;
     }
 
     @Override

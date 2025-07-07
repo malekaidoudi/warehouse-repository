@@ -3,6 +3,7 @@ package com.wh.reception.dto;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -70,6 +71,10 @@ public class PaletteDTO implements Serializable {
 
     @JsonProperty("dimension")
     private DimensionDTO dimension;
+
+    // Optional: Include related entities for display purposes
+    @JsonProperty("itemLinePalettes")
+    private List<ItemLinePaletteDTO> itemLinePalettes;
 
     public PaletteDTO() {
     }
@@ -207,6 +212,14 @@ public class PaletteDTO implements Serializable {
 
     public void setDimension(DimensionDTO dimension) {
         this.dimension = dimension;
+    }
+
+    public List<ItemLinePaletteDTO> getItemLinePalettes() {
+        return itemLinePalettes;
+    }
+
+    public void setItemLinePalettes(List<ItemLinePaletteDTO> itemLinePalettes) {
+        this.itemLinePalettes = itemLinePalettes;
     }
 
     @Override
